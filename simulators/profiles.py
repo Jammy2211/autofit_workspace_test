@@ -26,7 +26,7 @@ class Profile:
         ----------
         centre : float
             The x coordinate of the profile centre.
-        intensity : float
+        intensity
             Overall intensity normalisation of the profile.
         """
         # Every profile class we add below (e.g. Gaussian, Exponential) will call this __init__ method of the Profile
@@ -57,7 +57,7 @@ class Gaussian(Profile):
         ----------
         centre : float
             The x coordinate of the profile centre.
-        intensity : float
+        intensity
             Overall intensity normalisation of the `Gaussian` profile.
         sigma : float
             The sigma value controlling the size of the Gaussian.
