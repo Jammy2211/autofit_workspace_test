@@ -78,6 +78,7 @@ may be limits on the number of files allowed. The commented out code below shows
 direct output to the `.sqlite` file. 
 """
 dynesty = af.DynestyStatic(
+    name="search_queries",
     path_prefix=path.join("database", "session", dataset_name),
     number_of_cores=1,
     unique_tag=dataset_name,
@@ -92,7 +93,7 @@ contained in the `database.sqlite` file, which we can load using the `Aggregator
 """
 from autofit.database.aggregator import Aggregator
 
-agg = Aggregator.from_database(path.join("output", "database.sqlite"))
+agg = Aggregator.from_database(path.join("output", "session.sqlite"))
 
 """
 Make sure database + agg can be used.
@@ -103,6 +104,18 @@ samples_gen = agg.values("samples")
 When we convert this generator to a list and it, the outputs are 3 different MCMCSamples instances. These correspond to 
 the 3 model-fits performed above.
 """
-print("dynesty Samples:\n")
-print(samples_gen)
-print("Total Samples Objects = ", len(list(samples_gen)), "\n")
+path_prefix = agg.fit.path_prefix
+agg_query = agg.query(path_prefix == path.join("database", "session", dataset_name))
+print(
+    "Total Samples Objects via `path_prefix` model query = ",
+    len(agg_query),
+    "\n",
+)
+
+name = agg.fit.name
+agg_query = agg.query(name == "search_queries")
+print(
+    "Total Samples Objects via `name` model query = ",
+    len(agg_query),
+    "\n",
+)

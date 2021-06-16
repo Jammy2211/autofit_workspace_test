@@ -39,12 +39,12 @@ __Search__
 """
 search = af.DynestyStatic(
     path_prefix=path_prefix,
-    name="DynestyStatic_x4",
+    name="DynestyStatic_x8",
     unique_tag=dataset_name,
     nlive=250,
     walks=10,
     iterations_per_update=100000,
-    number_of_cores=4,
+    number_of_cores=8,
 )
 
 """
