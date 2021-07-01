@@ -57,7 +57,7 @@ ___Session__
 To output results directly to the database, we start a session, which includes the name of the database `.sqlite` file
 where results are stored.
 """
-session = af.db.open_database("database.sqlite")
+session = None
 
 """
 The code below loads the dataset and sets up the Analysis class.
@@ -88,12 +88,15 @@ dynesty = af.DynestyStatic(
 result = dynesty.fit(model=model, analysis=analysis)
 
 """
+__Database__
+
 First, note how the results are not contained in the `output` folder after each search completes. Instead, they are
 contained in the `database.sqlite` file, which we can load using the `Aggregator`.
 """
 from autofit.database.aggregator import Aggregator
 
 agg = Aggregator.from_database(path.join("output", "database.sqlite"))
+agg.add_directory(directory=path.join("output", "database"))
 
 """
 Make sure database + agg can be used.

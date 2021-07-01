@@ -57,7 +57,8 @@ ___Session__
 To output results directly to the database, we start a session, which includes the name of the database `.sqlite` file
 where results are stored.
 """
-session = af.db.open_database("database.sqlite")
+session = af.db.open_database("database_grid_search.sqlite")
+session = None
 
 """
 The code below loads the dataset and sets up the Analysis class.
@@ -78,22 +79,41 @@ may be limits on the number of files allowed. The commented out code below shows
 direct output to the `.sqlite` file. 
 """
 dynesty = af.DynestyStatic(
-    name="search_queries",
-    path_prefix=path.join("database", "session", dataset_name),
+    name="database_grid_search",
+    path_prefix=path.join("database"),
     number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
 )
 
-result = dynesty.fit(model=model, analysis=analysis)
+grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=2, number_of_cores=1)
+
+grid_search_result = grid_search.fit(
+    model=model, analysis=analysis, grid_priors=[model.gaussian.centre]
+)
 
 """
 First, note how the results are not contained in the `output` folder after each search completes. Instead, they are
 contained in the `database.sqlite` file, which we can load using the `Aggregator`.
 """
+import os
+import time
 from autofit.database.aggregator import Aggregator
 
-agg = Aggregator.from_database(path.join("output", "database.sqlite"))
+database_file = path.join("output", "database_grid_search.sqlite")
+
+try:
+    os.remove(database_file)
+except FileNotFoundError:
+    pass
+
+agg = Aggregator.from_database(database_file)
+
+start = time.time()
+agg.add_directory(
+    directory=path.join("output", "database", dataset_name, "database_grid_search")
+)
+print(f"Time to add directory to database {time.time() - start}")
 
 """
 Make sure database + agg can be used.
@@ -104,10 +124,41 @@ samples_gen = agg.values("samples")
 When we convert this generator to a list and it, the outputs are 3 different MCMCSamples instances. These correspond to 
 the 3 model-fits performed above.
 """
-path_prefix = agg.search.path_prefix
-agg_query = agg.query(path_prefix == path.join("database", "session", dataset_name))
-print("Total Samples Objects via `path_prefix` model query = ", len(agg_query), "\n")
+start = time.time()
+gaussian = agg.gaussian
+agg_query = agg.query(gaussian == m.Gaussian)
+print("Total queries for correct model = ", len(agg_query))
+print(f"Time to query based on correct model {time.time() - start} \n")
 
 name = agg.search.name
-agg_query = agg.query(name == "search_queries")
+agg_query = agg.query(name == "database_grid_search")
 print("Total Samples Objects via `name` model query = ", len(agg_query), "\n")
+
+"""
+Request 1: 
+
+Make the `GridSearchResult` accessible via the database. Ideally, this would be accessible even when a GridSearch 
+is mid-run (e.g. if only the first 10 of 16 runs are complete.
+"""
+# grid_search_result = agg.grid_search.result
+
+print(grid_search_result)
+print(grid_search_result.lower_limit_lists)
+
+"""
+Reqest 2:
+
+From the GridSearch, get an aggregator which contains only the maximum log likelihood model. E.g. if the 10th out of the 
+16 cells was the best fit:
+"""
+# agg_best_fit = agg.grid_search.best_result_agg
+# samples_gen = agg_best_fit.values("samples")
+
+
+"""
+Reqest 3:
+
+From the GridSearch, get an aggregator for any of the grid cells.
+"""
+# agg_first_cell = agg.grid_search.agg_index(index=0)
+# samples_gen = agg_first_cell.values("samples")

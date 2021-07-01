@@ -90,5 +90,3 @@ class Gaussian(Profile):
             np.divide(self.intensity, self.sigma * np.sqrt(2.0 * np.pi)),
             np.exp(-0.5 * np.square(np.divide(transformed_xvalues, self.sigma))),
         )
-
-
