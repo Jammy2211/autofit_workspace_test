@@ -1,19 +1,16 @@
-# %matplotlib inline
-# from pyprojroot import here
-# workspace_path = str(here())
-# %cd $workspace_path
-# print(f"Working Directory has been set to `{workspace_path}`")
+"""
+This script generates a large set of results in a .sqlite database, for profiling the database.
 
+"""
 import autofit as af
 
+import os
+import time
 from os import path
 import numpy as np
 
 import model as m
 import analysis as a
-
-import time
-import os
 
 
 def simulate_line_from_gaussian(instance):
@@ -25,7 +22,9 @@ def simulate_line_from_gaussian(instance):
     pixels = 100
     xvalues = np.arange(pixels)
 
-    """Evaluate this `Gaussian` model instance at every xvalues to create its model profile."""
+    """
+    Evaluate this `Gaussian` model instance at every xvalues to create its model profile.
+    """
     try:
         model_line = sum(
             [line.profile_from_xvalues(xvalues=xvalues) for line in instance]
@@ -70,6 +69,7 @@ for i in range(database_size):
     gaussian = model.random_instance()
 
     data, noise_map = simulate_line_from_gaussian(instance=gaussian)
+
     """
     __Analysis__
     """
@@ -79,13 +79,13 @@ for i in range(database_size):
     __Search__
     """
     dynesty = af.DynestyStatic(
-        name="queries_profiling",
-        path_prefix=path.join("database", "queries_profiling", dataset_name),
-        number_of_cores=1,
+        path_prefix=path.join("database", "profiling"),
+        number_of_cores=4,
         unique_tag=dataset_name,
     )
 
     dynesty.fit(model=model, analysis=analysis)
+
 
 """
 __Database__
@@ -93,33 +93,11 @@ __Database__
 First, note how the results are not contained in the `output` folder after each search completes. Instead, they are
 contained in the `queries_profiling.sqlite` file, which we can load using the `Aggregator`.
 """
-if path.exists(path.join("output", "queries_profiling.sqlite")):
-    os.remove(path.join("output", "queries_profiling.sqlite"))
+if path.exists(path.join("output", "profiling.sqlite")):
+    os.remove(path.join("output", "profiling.sqlite"))
 
-agg = af.Aggregator.from_database(path.join("output", "queries_profiling.sqlite"))
+agg = af.Aggregator.from_database("profiling.sqlite")
 
 start = time.time()
-agg.add_directory(directory=path.join("output", "database", "queries_profiling"))
+agg.add_directory(directory=path.join("output", "database", "profiling"))
 print(f"Time to add directory to database {time.time() - start}")
-
-start = time.time()
-gaussian = agg.gaussian
-agg_query = agg.query(gaussian == m.Gaussian)
-print("Total queries for correct model = ", len(agg_query))
-print(f"Time to query based on correct model {time.time() - start} \n")
-
-start = time.time()
-gaussian = agg.gaussian
-agg_query = agg.query(gaussian != m.Gaussian)
-print("Total queries for incorrect model = 0")
-print(f"Time to query based on incorrect model {time.time() - start} \n")
-
-start = time.time()
-agg_query = agg.query(agg.search.name == "queries_profiling")
-print("Total queries for correct name = ", len(agg_query))
-print(f"Time to query based on correct name {time.time() - start} \n")
-
-start = time.time()
-agg_query = agg.query(agg.search.name == "queries_profilin")
-print("Total queries for incorrect name = ", len(agg_query))
-print(f"Time to query based on incorrect name {time.time() - start} \n")
