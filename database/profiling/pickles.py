@@ -30,3 +30,7 @@ print(f"Time to load model via pickle {time.time() - start} \n")
 start = time.time()
 agg.values("samples")
 print(f"Time to load samples via pickle {time.time() - start} \n")
+
+start = time.time()
+agg.values("search")
+print(f"Time to load search via pickle {time.time() - start} \n")
