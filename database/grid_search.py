@@ -81,12 +81,12 @@ direct output to the `.sqlite` file.
 dynesty = af.DynestyStatic(
     name="database_grid_search",
     path_prefix=path.join("database"),
-    number_of_cores=1,
+    number_of_cores=4,
     unique_tag=dataset_name,
     session=session,
 )
 
-grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=4, number_of_cores=5)
+grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=2, number_of_cores=1)
 
 grid_search_result = grid_search.fit(
     model=model, analysis=analysis, grid_priors=[model.gaussian.centre]
@@ -103,7 +103,7 @@ from autofit.database.aggregator import Aggregator
 database_file = "database_grid_search.sqlite"
 
 try:
-    os.remove(database_file)
+    os.remove(path.join("output", database_file))
 except FileNotFoundError:
     pass
 
@@ -135,15 +135,19 @@ agg_query = agg.query(name == "database_grid_search")
 print("Total Samples Objects via `name` model query = ", len(agg_query), "\n")
 
 """
+Test that we can retrieve an aggregator with only the grid search results:
+"""
+agg_grid = agg.grid_searches()
+print("Total aggregator via `grid_searches` query = ", len(agg_grid), "\n")
+
+"""
 Request 1: 
 
 Make the `GridSearchResult` accessible via the database. Ideally, this would be accessible even when a GridSearch 
 is mid-run (e.g. if only the first 10 of 16 runs are complete.
 """
-# grid_search_result = agg.grid_search.result
-
+grid_search_result = agg_grid[0]['result']
 print(grid_search_result)
-print(grid_search_result.lower_limit_lists)
 
 """
 Reqest 2:
@@ -151,8 +155,8 @@ Reqest 2:
 From the GridSearch, get an aggregator which contains only the maximum log likelihood model. E.g. if the 10th out of the 
 16 cells was the best fit:
 """
-# agg_best_fit = agg.grid_search.best_result_agg
-# samples_gen = agg_best_fit.values("samples")
+agg_best_fit = agg_grid.best_fits[0]
+print("Size of Agg best fit = ", len(agg_best_fit), "\n")
 
 
 """
@@ -160,5 +164,5 @@ Reqest 3:
 
 From the GridSearch, get an aggregator for any of the grid cells.
 """
-# agg_first_cell = agg.grid_search.agg_index(index=0)
-# samples_gen = agg_first_cell.values("samples")
+cell_aggregator = agg_grid.cell_number(1)
+print("Size of Agg cell = ", len(cell_aggregator), "\n")
