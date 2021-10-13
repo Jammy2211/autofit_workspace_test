@@ -43,10 +43,10 @@ __Model__
 
 Next, we create our model, which again corresponds to a single `Gaussian` with manual priors.
 """
-model = af.Model(m.Gaussian)
+model = af.Model(af.ex.Gaussian)
 
 model.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-model.intensity = af.UniformPrior(lower_limit=1e-2, upper_limit=1e2)
+model.normalization = af.UniformPrior(lower_limit=1e-2, upper_limit=1e2)
 model.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=30.0)
 
 """
@@ -67,7 +67,7 @@ noise_map = af.util.numpy_array_from_json(
     file_path=path.join(dataset_path, "noise_map.json")
 )
 
-analysis = a.Analysis(data=data, noise_map=noise_map)
+analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
 """
 Resultsare written directly to the `database.sqlite` file omitted hard-disc output entirely, which
@@ -89,7 +89,7 @@ grid_search_result = grid_search.fit(
     model=model, analysis=analysis, grid_priors=[model.centre]
 )
 
-model = af.Model(m.Gaussian)
+model = af.Model(af.ex.Gaussian)
 
 model.centre = grid_search_result.model.centre
 

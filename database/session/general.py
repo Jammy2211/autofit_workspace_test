@@ -25,6 +25,7 @@ A full description of PyAutoFit's database tools is provided in the database cha
 
 import autofit as af
 
+import os
 from os import path
 import numpy as np
 
@@ -43,7 +44,7 @@ Next, we create our model, which again corresponds to a single `Gaussian` with m
 model = af.Collection(gaussian=af.ex.Gaussian)
 
 model.gaussian.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-model.gaussian.intensity = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
+model.gaussian.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
 model.gaussian.sigma = af.GaussianPrior(
     mean=10.0, sigma=5.0, lower_limit=0.0, upper_limit=np.inf
 )
@@ -54,7 +55,9 @@ ___Session__
 To output results directly to the database, we start a session, which includes the name of the database `.sqlite` file
 where results are stored.
 """
-session = af.db.open_database("database.sqlite")
+database_file = "database_session_general.sqlite"
+session = af.db.open_database(database_file)
+
 """
 The code below loads the dataset and sets up the Analysis class.
 """
@@ -74,8 +77,8 @@ may be limits on the number of files allowed. The commented out code below shows
 direct output to the `.sqlite` file. 
 """
 dynesty = af.DynestyStatic(
-    name="search_queries",
-    path_prefix=path.join("database", "session", dataset_name),
+    name="general",
+    path_prefix=path.join("database", "session"),
     number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
@@ -91,23 +94,35 @@ contained in the `database.sqlite` file, which we can load using the `Aggregator
 """
 from autofit.database.aggregator import Aggregator
 
-agg = Aggregator.from_database(path.join("output", "database.sqlite"))
+try:
+    os.remove(path.join(database_file))
+except FileNotFoundError:
+    pass
+
+
+agg = Aggregator.from_database(path.join(database_file))
+agg.add_directory(directory=path.join("output", "database", "directory"))
 
 """
+__Samples + Results__
+
 Make sure database + agg can be used.
 """
-samples_gen = agg.values("samples")
+for samples in agg.values("samples"):
+    print(samples.parameter_lists[0])
+
+mp_instances = [samps.median_pdf_instance for samps in agg.values("samples")]
+print(mp_instances)
 
 """
-When we convert this generator to a list and it, the outputs are 3 different MCMCSamples instances. These correspond to 
-the 3 model-fits performed above.
+__Queries__
 """
 path_prefix = agg.search.path_prefix
 agg_query = agg.query(path_prefix == path.join("database", "session", dataset_name))
 print("Total Samples Objects via `path_prefix` model query = ", len(agg_query), "\n")
 
 name = agg.search.name
-agg_query = agg.query(name == "queries")
+agg_query = agg.query(name == "general")
 print("Total Samples Objects via `name` model query = ", len(agg_query), "\n")
 
 gaussian = agg.model.gaussian

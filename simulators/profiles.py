@@ -19,22 +19,22 @@ representing the same thing.
 
 
 class Profile:
-    def __init__(self, centre=0.0, intensity=0.01):
+    def __init__(self, centre=0.0, normalization=0.01):
         """Represents an Abstract 1D profile.
 
         Parameters
         ----------
         centre
             The x coordinate of the profile centre.
-        intensity
-            Overall intensity normalisation of the profile.
+        normalization
+            Overall normalization normalisation of the profile.
         """
         # Every profile class we add below (e.g. Gaussian, Exponential) will call this __init__ method of the Profile
-        # base class. Given that every profile will have a centre and intensity, this means we can set these parameters
+        # base class. Given that every profile will have a centre and normalization, this means we can set these parameters
         # in the Profile class`s init method instead of repeating the two lines of code for every individual profile.
 
         self.centre = centre
-        self.intensity = intensity
+        self.normalization = normalization
 
 
 """
@@ -47,7 +47,7 @@ class Gaussian(Profile):
     def __init__(
         self,
         centre=0.0,  # <- PyAutoFit recognises these constructor arguments
-        intensity=0.1,  # <- are the Gaussian`s model parameters.
+        normalization=0.1,  # <- are the Gaussian`s model parameters.
         sigma=0.01,
     ):
         """Represents a 1D `Gaussian` profile, which may be treated as a model-component of PyAutoFit the
@@ -57,26 +57,26 @@ class Gaussian(Profile):
         ----------
         centre
             The x coordinate of the profile centre.
-        intensity
-            Overall intensity normalisation of the `Gaussian` profile.
+        normalization
+            Overall normalization normalisation of the `Gaussian` profile.
         sigma
             The sigma value controlling the size of the Gaussian.
         """
         # Writing (Profile) above does not mean the `Gaussian` class will call the Profile class`s __init__ method. To
         # achieve this we have the call the `super` method following the format below.
-        super(Gaussian, self).__init__(centre=centre, intensity=intensity)
+        super(Gaussian, self).__init__(centre=centre, normalization=normalization)
 
         # This super method calls the __init__ method of the Profile class above, which means we do not need
         # to write the two lines of code below (which are commented out given they are not necessary).
 
         # self.centre = centre
-        # self.intensity = intensity
+        # self.normalization = normalization
 
         self.sigma = sigma  # We still need to set sigma for the Gaussian, of course.
 
     def profile_from_xvalues(self, xvalues):
         """
-        Calculate the intensity of the profile on a line of Cartesian x coordinates.
+        Calculate the normalization of the profile on a line of Cartesian x coordinates.
 
         The input xvalues are translated to a coordinate system centred on the Gaussian, using its centre.
 
@@ -87,6 +87,6 @@ class Gaussian(Profile):
         """
         transformed_xvalues = np.subtract(xvalues, self.centre)
         return np.multiply(
-            np.divide(self.intensity, self.sigma * np.sqrt(2.0 * np.pi)),
+            np.divide(self.normalization, self.sigma * np.sqrt(2.0 * np.pi)),
             np.exp(-0.5 * np.square(np.divide(transformed_xvalues, self.sigma))),
         )

@@ -17,5 +17,5 @@ from os import path
 __Gaussian x1__
 """
 dataset_path = path.join("dataset", "example_1d", "gaussian_x1")
-gaussian = profiles.Gaussian(centre=50.0, intensity=25.0, sigma=10.0)
+gaussian = profiles.Gaussian(centre=50.0, normalization=25.0, sigma=10.0)
 util.simulate_line_from_gaussian(gaussian=gaussian, dataset_path=dataset_path)

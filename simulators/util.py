@@ -52,6 +52,6 @@ def simulate_line_from_gaussian(gaussian, dataset_path):
     )
     plt.title("1D Gaussian Dataset.")
     plt.xlabel("x values of profile")
-    plt.ylabel("Profile intensity")
+    plt.ylabel("Profile normalization")
     plt.savefig(path.join(dataset_path, "image.png"))
     plt.close()

@@ -28,6 +28,5 @@ map_filename = path.join("id_update", "update.yaml")
 from autofit.tools.update_identifiers import update_identifiers_from_file
 
 update_identifiers_from_file(
-    output_directory=output_directory,
-    map_filename=map_filename
+    output_directory=output_directory, map_filename=map_filename
 )

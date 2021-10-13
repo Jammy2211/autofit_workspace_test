@@ -55,7 +55,8 @@ ___Session__
 To output results directly to the database, we start a session, which includes the name of the database `.sqlite` file
 where results are stored.
 """
-session = None
+database_file = "database_session_grid_search.sqlite"
+session = af.db.open_database(database_file)
 
 """
 The code below loads the dataset and sets up the Analysis class.
@@ -77,7 +78,7 @@ direct output to the `.sqlite` file.
 """
 dynesty = af.DynestyStatic(
     name="grid_search",
-    path_prefix=path.join("database", "directory"),
+    path_prefix=path.join("database", "session"),
     number_of_cores=4,
     unique_tag=dataset_name,
     session=session,
@@ -97,20 +98,7 @@ import os
 import time
 from autofit.database.aggregator import Aggregator
 
-database_file = "database_directory_grid_search.sqlite"
-
-try:
-    os.remove(path.join("output", database_file))
-except FileNotFoundError:
-    pass
-
 agg = Aggregator.from_database(database_file)
-
-start = time.time()
-agg.add_directory(
-    directory=path.join("output", "database", "directory", dataset_name, "grid_search")
-)
-print(f"Time to add directory to database {time.time() - start}")
 
 """
 Make sure database + agg can be used.

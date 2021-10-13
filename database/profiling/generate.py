@@ -51,10 +51,10 @@ __Model__
 
 Next, we create our model, which again corresponds to a single `Gaussian` with manual priors.
 """
-model = af.Collection(gaussian=m.Gaussian)
+model = af.Collection(gaussian=af.ex.Gaussian)
 
 model.gaussian.centre = af.UniformPrior(lower_limit=10.0, upper_limit=90.0)
-model.gaussian.intensity = af.UniformPrior(lower_limit=1.0, upper_limit=100.0)
+model.gaussian.normalization = af.UniformPrior(lower_limit=1.0, upper_limit=100.0)
 model.gaussian.sigma = af.UniformPrior(lower_limit=1.0, upper_limit=10.0)
 
 database_size = 250
@@ -73,7 +73,7 @@ for i in range(database_size):
     """
     __Analysis__
     """
-    analysis = a.Analysis(data=data, noise_map=noise_map)
+    analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
     """
     __Search__

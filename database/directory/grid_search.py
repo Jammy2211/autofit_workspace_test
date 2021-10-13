@@ -25,11 +25,9 @@ A full description of PyAutoFit's database tools is provided in the database cha
 
 import autofit as af
 
+import os
 from os import path
 import numpy as np
-
-import model as m
-import analysis as a
 
 """
 __Dataset Names__
@@ -43,10 +41,10 @@ __Model__
 
 Next, we create our model, which again corresponds to a single `Gaussian` with manual priors.
 """
-model = af.Collection(gaussian=m.Gaussian)
+model = af.Collection(gaussian=af.ex.Gaussian)
 
 model.gaussian.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-model.gaussian.intensity = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
+model.gaussian.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
 model.gaussian.sigma = af.GaussianPrior(
     mean=10.0, sigma=5.0, lower_limit=0.0, upper_limit=np.inf
 )
@@ -57,7 +55,6 @@ ___Session__
 To output results directly to the database, we start a session, which includes the name of the database `.sqlite` file
 where results are stored.
 """
-session = af.db.open_database("database_grid_search.sqlite")
 session = None
 
 """
@@ -70,7 +67,16 @@ noise_map = af.util.numpy_array_from_json(
     file_path=path.join(dataset_path, "noise_map.json")
 )
 
-analysis = a.Analysis(data=data, noise_map=noise_map)
+analysis = af.ex.Analysis(data=data, noise_map=noise_map)
+
+search = af.DynestyStatic(
+    path_prefix=path.join("database", "directory"),
+    name="extra_search",
+    unique_tag=dataset_name,
+    session=session,
+)
+
+search.fit(model=model, analysis=analysis)
 
 """
 Resultsare written directly to the `database.sqlite` file omitted hard-disc output entirely, which
@@ -79,8 +85,8 @@ may be limits on the number of files allowed. The commented out code below shows
 direct output to the `.sqlite` file. 
 """
 dynesty = af.DynestyStatic(
-    name="database_grid_search",
-    path_prefix=path.join("database"),
+    name="grid_search",
+    path_prefix=path.join("database", "directory"),
     number_of_cores=4,
     unique_tag=dataset_name,
     session=session,
@@ -100,7 +106,7 @@ import os
 import time
 from autofit.database.aggregator import Aggregator
 
-database_file = "database_grid_search.sqlite"
+database_file = "database_directory_grid_search.sqlite"
 
 try:
     os.remove(path.join("output", database_file))
@@ -110,9 +116,7 @@ except FileNotFoundError:
 agg = Aggregator.from_database(database_file)
 
 start = time.time()
-agg.add_directory(
-    directory=path.join("output", "database", dataset_name, "database_grid_search")
-)
+agg.add_directory(directory=path.join("output", "database", "directory", dataset_name))
 print(f"Time to add directory to database {time.time() - start}")
 
 """
@@ -126,7 +130,7 @@ the 3 model-fits performed above.
 """
 start = time.time()
 gaussian = agg.model.gaussian
-agg_query = agg.query(gaussian == m.Gaussian)
+agg_query = agg.query(gaussian == af.ex.Gaussian)
 print("Total queries for correct model = ", len(agg_query))
 print(f"Time to query based on correct model {time.time() - start} \n")
 
@@ -139,11 +143,11 @@ Test that we can retrieve an aggregator with only the grid search results:
 """
 agg_grid = agg.grid_searches()
 print("Total aggregator via `grid_searches` query = ", len(agg_grid), "\n")
+stop
 unique_tag = agg_grid.search.unique_tag
 agg_qrid = agg_grid.query(unique_tag == "gaussian_x1")
 
 print("Total aggregator via `grid_searches` & unique tag query = ", len(agg_grid), "\n")
-stop
 
 """
 Request 1: 
@@ -151,7 +155,7 @@ Request 1:
 Make the `GridSearchResult` accessible via the database. Ideally, this would be accessible even when a GridSearch 
 is mid-run (e.g. if only the first 10 of 16 runs are complete.
 """
-grid_search_result = agg_grid[0]["result"]
+grid_search_result = agg_grid["result"]
 print(grid_search_result)
 
 """
@@ -166,7 +170,6 @@ instance = agg_best_fit.values("instance")[0]
 print(instance.gaussian.sigma)
 samples = agg_best_fit.values("samples")[0]
 print(samples)
-stop
 
 
 """
@@ -174,5 +177,5 @@ Reqest 3:
 
 From the GridSearch, get an aggregator for any of the grid cells.
 """
-cell_aggregator = agg_grid.cell_number(1)
-print("Size of Agg cell = ", len(cell_aggregator), "\n")
+# cell_aggregator = agg_grid.cell_number(1)
+# print("Size of Agg cell = ", len(cell_aggregator), "\n")

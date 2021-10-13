@@ -60,7 +60,7 @@
                 "upper": "1.0"
             }
         },
-        "intensity": {
+        "normalization": {
             "type": "LogUniform",
             "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
@@ -131,7 +131,7 @@
                 "upper": "inf"
             }
         },
-        "intensity": {
+        "normalization": {
             "type": "LogUniform",
             "lower_limit": 1e-06,
             "upper_limit": 10.0,
@@ -245,7 +245,7 @@
                 "upper": "1.0"
             }
         },
-        "intensity": {
+        "normalization": {
             "type": "LogUniform",
             "lower_limit": 1e-06,
             "upper_limit": 10.0,
@@ -329,7 +329,7 @@
                 "upper": "inf"
             }
         },
-        "intensity": {
+        "normalization": {
             "type": "LogUniform",
             "lower_limit": 1e-06,
             "upper_limit": 10.0,
@@ -430,7 +430,7 @@
                 "upper": "1.0"
             }
         },
-        "intensity": {
+        "normalization": {
             "type": "LogUniform",
             "lower_limit": 1e-06,
             "upper_limit": 10.0,
@@ -501,7 +501,7 @@
                 "upper": "inf"
             }
         },
-        "intensity": {
+        "normalization": {
             "type": "LogUniform",
             "lower_limit": 1e-06,
             "upper_limit": 10.0,
@@ -602,7 +602,7 @@
                 "upper": "1.0"
             }
         },
-        "intensity": {
+        "normalization": {
             "type": "LogUniform",
             "lower_limit": 1e-06,
             "upper_limit": 10.0,
@@ -673,7 +673,7 @@
                 "upper": "inf"
             }
         },
-        "intensity": {
+        "normalization": {
             "type": "LogUniform",
             "lower_limit": 1e-06,
             "upper_limit": 10.0,
@@ -800,7 +800,7 @@
                 "upper": "1.0"
             }
         },
-        "intensity": {
+        "normalization": {
             "type": "LogUniform",
             "lower_limit": 1e-06,
             "upper_limit": 10.0,
@@ -889,7 +889,7 @@
         "mean": 0.0,
         "sigma": 0.3
     },
-    "intensity": {
+    "normalization": {
         "type": "LogUniform",
         "lower_limit": 1e-06,
         "upper_limit": 1000000.0,
@@ -1003,7 +1003,7 @@
                 "upper": "1.0"
             }
         },
-        "intensity": {
+        "normalization": {
             "type": "LogUniform",
             "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
