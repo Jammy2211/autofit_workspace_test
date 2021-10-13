@@ -31,9 +31,9 @@
             }
         },
         "einstein_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 3.0,
+        "type": "Uniform",
+        "lower_limit": 0.0,
+        "upper_limit": 8.0,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.25
@@ -76,9 +76,9 @@
             }
         },
         "einstein_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 3.0,
+        "type": "Uniform",
+        "lower_limit": 0.0,
+        "upper_limit": 8.0,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.25
@@ -151,9 +151,9 @@
             }
         },
         "einstein_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 3.0,
+        "type": "Uniform",
+        "lower_limit": 0.0,
+        "upper_limit": 8.0,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.25
@@ -196,9 +196,9 @@
             }
         },
         "einstein_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 3.0,
+        "type": "Uniform",
+        "lower_limit": 0.0,
+        "upper_limit": 8.0,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.25
@@ -284,9 +284,9 @@
             }
         },
         "einstein_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 3.0,
+        "type": "Uniform",
+        "lower_limit": 0.0,
+        "upper_limit": 8.0,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.25
@@ -342,9 +342,9 @@
             }
         },
         "einstein_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 3.0,
+        "type": "Uniform",
+        "lower_limit": 0.0,
+        "upper_limit": 8.0,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.25
@@ -430,9 +430,9 @@
             }
         },
         "einstein_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 3.0,
+        "type": "Uniform",
+        "lower_limit": 0.0,
+        "upper_limit": 8.0,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.25
@@ -488,9 +488,9 @@
             }
         },
         "einstein_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 3.0,
+        "type": "Uniform",
+        "lower_limit": 0.0,
+        "upper_limit": 8.0,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.25
@@ -589,9 +589,9 @@
             }
         },
         "einstein_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 3.0,
+        "type": "Uniform",
+        "lower_limit": 0.0,
+        "upper_limit": 8.0,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.25
@@ -660,9 +660,9 @@
             }
         },
         "einstein_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 3.0,
+        "type": "Uniform",
+        "lower_limit": 0.0,
+        "upper_limit": 8.0,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.25
@@ -774,9 +774,9 @@
             }
         },
         "einstein_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 3.0,
+        "type": "Uniform",
+        "lower_limit": 0.0,
+        "upper_limit": 8.0,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.25

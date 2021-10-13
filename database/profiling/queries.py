@@ -24,13 +24,13 @@ contained in the `queries_profiling.sqlite` file, which we can load using the `A
 agg = af.Aggregator.from_database("profiling.sqlite")
 
 start = time.time()
-gaussian = agg.gaussian
+gaussian = agg.model.gaussian
 agg_query = agg.query(gaussian == m.Gaussian)
 print("Total queries for correct model = ", len(agg_query))
 print(f"Time to query based on correct model {time.time() - start} \n")
 
 start = time.time()
-gaussian = agg.gaussian
+gaussian = agg.model.gaussian
 agg_query = agg.query(gaussian != m.Gaussian)
 print(f"Time to query based on incorrect model {time.time() - start} \n")
 

@@ -22,11 +22,11 @@ class Gaussian:
 
         Parameters
         ----------
-        centre : float
+        centre
             The x coordinate of the profile centre.
         intensity
             Overall intensity normalisation of the `Gaussian` profile.
-        sigma : float
+        sigma
             The sigma value controlling the size of the Gaussian.
         """
         self.centre = centre

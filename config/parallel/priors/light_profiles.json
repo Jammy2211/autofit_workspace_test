@@ -32,7 +32,7 @@
         },
         "intensity": {
             "type": "LogUniform",
-            "lower_limit": 1e-06,
+            "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
             "width_modifier": {
                 "type": "Relative",
@@ -58,7 +58,7 @@
         },
         "sersic_index": {
             "type": "Uniform",
-            "lower_limit": 0.5,
+            "lower_limit": 0.8,
             "upper_limit": 5.0,
             "width_modifier": {
                 "type": "Absolute",
@@ -133,7 +133,7 @@
         },
         "intensity": {
             "type": "LogUniform",
-            "lower_limit": 1e-06,
+            "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
             "width_modifier": {
                 "type": "Relative",
@@ -159,7 +159,7 @@
         },
         "sersic_index": {
             "type": "Uniform",
-            "lower_limit": 0.5,
+            "lower_limit": 0.8,
             "upper_limit": 5.0,
             "width_modifier": {
                 "type": "Absolute",
@@ -204,7 +204,7 @@
         },
         "intensity": {
             "type": "LogUniform",
-            "lower_limit": 1e-06,
+            "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
             "width_modifier": {
                 "type": "Relative",
@@ -292,7 +292,7 @@
         },
         "intensity": {
             "type": "LogUniform",
-            "lower_limit": 1e-06,
+            "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
             "width_modifier": {
                 "type": "Relative",
@@ -350,7 +350,7 @@
         },
         "intensity": {
             "type": "LogUniform",
-            "lower_limit": 1e-06,
+            "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
             "width_modifier": {
                 "type": "Relative",
@@ -438,7 +438,7 @@
         },
         "intensity": {
             "type": "LogUniform",
-            "lower_limit": 1e-06,
+            "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
             "width_modifier": {
                 "type": "Relative",
@@ -496,7 +496,7 @@
         },
         "intensity": {
             "type": "LogUniform",
-            "lower_limit": 1e-06,
+            "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
             "width_modifier": {
                 "type": "Relative",
@@ -522,7 +522,7 @@
         },
         "sersic_index": {
             "type": "Uniform",
-            "lower_limit": 0.5,
+            "lower_limit": 0.8,
             "upper_limit": 5.0,
             "width_modifier": {
                 "type": "Absolute",
@@ -649,7 +649,7 @@
         },
         "intensity": {
             "type": "LogUniform",
-            "lower_limit": 1e-06,
+            "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
             "width_modifier": {
                 "type": "Relative",
@@ -675,7 +675,7 @@
         },
         "sersic_index": {
             "type": "Uniform",
-            "lower_limit": 0.5,
+            "lower_limit": 0.8,
             "upper_limit": 5.0,
             "width_modifier": {
                 "type": "Absolute",
@@ -772,7 +772,7 @@
         },
         "intensity": {
             "type": "LogUniform",
-            "lower_limit": 1e-06,
+            "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
             "width_modifier": {
                 "type": "Relative",
@@ -860,7 +860,7 @@
         },
         "intensity": {
             "type": "LogUniform",
-            "lower_limit": 1e-06,
+            "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
             "width_modifier": {
                 "type": "Relative",
@@ -918,7 +918,7 @@
         },
         "intensity": {
             "type": "LogUniform",
-            "lower_limit": 1e-06,
+            "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
             "width_modifier": {
                 "type": "Relative",
@@ -1019,7 +1019,7 @@
         },
         "intensity": {
             "type": "LogUniform",
-            "lower_limit": 1e-06,
+            "lower_limit": 1.0e-6,
             "upper_limit": 1000000.0,
             "width_modifier": {
                 "type": "Relative",

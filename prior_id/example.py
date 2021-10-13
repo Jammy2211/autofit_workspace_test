@@ -38,11 +38,7 @@ path_prefix = path.join("prior_id")
 __Search__
 """
 search = af.DynestyStatic(
-    path_prefix=path_prefix,
-    name="example",
-    unique_tag=dataset_name,
-    nlive=50,
-    walks=5,
+    path_prefix=path_prefix, name="example", unique_tag=dataset_name, nlive=50, walks=5
 )
 
 """

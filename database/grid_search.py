@@ -86,7 +86,7 @@ dynesty = af.DynestyStatic(
     session=session,
 )
 
-grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=2, number_of_cores=1)
+grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=2, number_of_cores=4)
 
 grid_search_result = grid_search.fit(
     model=model, analysis=analysis, grid_priors=[model.gaussian.centre]
@@ -125,7 +125,7 @@ When we convert this generator to a list and it, the outputs are 3 different MCM
 the 3 model-fits performed above.
 """
 start = time.time()
-gaussian = agg.gaussian
+gaussian = agg.model.gaussian
 agg_query = agg.query(gaussian == m.Gaussian)
 print("Total queries for correct model = ", len(agg_query))
 print(f"Time to query based on correct model {time.time() - start} \n")
@@ -139,6 +139,11 @@ Test that we can retrieve an aggregator with only the grid search results:
 """
 agg_grid = agg.grid_searches()
 print("Total aggregator via `grid_searches` query = ", len(agg_grid), "\n")
+unique_tag = agg_grid.search.unique_tag
+agg_qrid = agg_grid.query(unique_tag == "gaussian_x1")
+
+print("Total aggregator via `grid_searches` & unique tag query = ", len(agg_grid), "\n")
+stop
 
 """
 Request 1: 
@@ -146,7 +151,7 @@ Request 1:
 Make the `GridSearchResult` accessible via the database. Ideally, this would be accessible even when a GridSearch 
 is mid-run (e.g. if only the first 10 of 16 runs are complete.
 """
-grid_search_result = agg_grid[0]['result']
+grid_search_result = agg_grid[0]["result"]
 print(grid_search_result)
 
 """
@@ -155,8 +160,13 @@ Reqest 2:
 From the GridSearch, get an aggregator which contains only the maximum log likelihood model. E.g. if the 10th out of the 
 16 cells was the best fit:
 """
-agg_best_fit = agg_grid.best_fits[0]
+agg_best_fit = agg_grid.best_fits()
 print("Size of Agg best fit = ", len(agg_best_fit), "\n")
+instance = agg_best_fit.values("instance")[0]
+print(instance.gaussian.sigma)
+samples = agg_best_fit.values("samples")[0]
+print(samples)
+stop
 
 
 """
