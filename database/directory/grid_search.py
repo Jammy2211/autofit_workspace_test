@@ -92,10 +92,12 @@ dynesty = af.DynestyStatic(
     session=session,
 )
 
+parent = af.DynestyStatic(name="parent")
+
 grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=2, number_of_cores=4)
 
 grid_search_result = grid_search.fit(
-    model=model, analysis=analysis, grid_priors=[model.gaussian.centre]
+    model=model, analysis=analysis, grid_priors=[model.gaussian.centre], parent=parent
 )
 
 """
@@ -143,7 +145,6 @@ Test that we can retrieve an aggregator with only the grid search results:
 """
 agg_grid = agg.grid_searches()
 print("Total aggregator via `grid_searches` query = ", len(agg_grid), "\n")
-stop
 unique_tag = agg_grid.search.unique_tag
 agg_qrid = agg_grid.query(unique_tag == "gaussian_x1")
 
@@ -171,7 +172,6 @@ print(instance.gaussian.sigma)
 samples = agg_best_fit.values("samples")[0]
 print(samples)
 
-
 """
 Reqest 3:
 
@@ -179,3 +179,10 @@ From the GridSearch, get an aggregator for any of the grid cells.
 """
 # cell_aggregator = agg_grid.cell_number(1)
 # print("Size of Agg cell = ", len(cell_aggregator), "\n")
+
+"""
+Stored and prints input parent grid of grid search.
+"""
+for fit_grid in agg_grid:
+
+    print(fit_grid.parent)
