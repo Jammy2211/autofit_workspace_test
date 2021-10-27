@@ -183,6 +183,7 @@ From the GridSearch, get an aggregator for any of the grid cells.
 """
 Stored and prints input parent grid of grid search.
 """
-for fit_grid in agg_grid:
 
-    print(fit_grid.parent)
+for fit in agg_best_fit:
+
+    print(fit.parent)
