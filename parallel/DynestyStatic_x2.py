@@ -25,8 +25,6 @@ from autoconf import conf
 conf.instance.push(new_path=path.join(cwd, "config", "parallel"))
 
 import autofit as af
-import model as m
-import analysis as a
 
 """
 __Paths__

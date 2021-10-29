@@ -28,9 +28,6 @@ import autofit as af
 from os import path
 import numpy as np
 
-import model as m
-import analysis as a
-
 """
 __Dataset Names__
 

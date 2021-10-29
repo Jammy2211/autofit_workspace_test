@@ -30,6 +30,14 @@ from os import path
 import numpy as np
 
 """
+___Session__
+
+To output results directly to the database, we start a session, which includes the name of the database `.sqlite` file
+where results are stored.
+"""
+session = None
+
+"""
 __Dataset Names__
 
 Load the dataset from hard-disc, set up its `Analysis` class and fit it with a non-linear search. 
@@ -48,14 +56,6 @@ model.gaussian.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=
 model.gaussian.sigma = af.GaussianPrior(
     mean=10.0, sigma=5.0, lower_limit=0.0, upper_limit=np.inf
 )
-
-"""
-___Session__
-
-To output results directly to the database, we start a session, which includes the name of the database `.sqlite` file
-where results are stored.
-"""
-session = None
 
 """
 The code below loads the dataset and sets up the Analysis class.
@@ -101,8 +101,7 @@ grid_search_result = grid_search.fit(
 )
 
 """
-First, note how the results are not contained in the `output` folder after each search completes. Instead, they are
-contained in the `database.sqlite` file, which we can load using the `Aggregator`.
+Scrape directory to create .sqlite file.
 """
 import os
 import time
@@ -143,29 +142,25 @@ print("Total Samples Objects via `name` model query = ", len(agg_query), "\n")
 """
 Test that we can retrieve an aggregator with only the grid search results:
 """
-agg_grid = agg.grid_searches()
-print("Total aggregator via `grid_searches` query = ", len(agg_grid), "\n")
-unique_tag = agg_grid.search.unique_tag
-agg_qrid = agg_grid.query(unique_tag == "gaussian_x1")
+agg_grid_searches = agg.grid_searches()
+print("Total aggregator via `grid_searches` query = ", len(agg_grid_searches), "\n")
+unique_tag = agg_grid_searches.search.unique_tag
+agg_qrid = agg_grid_searches.query(unique_tag == "gaussian_x1")
 
-print("Total aggregator via `grid_searches` & unique tag query = ", len(agg_grid), "\n")
-
-"""
-Request 1: 
-
-Make the `GridSearchResult` accessible via the database. Ideally, this would be accessible even when a GridSearch 
-is mid-run (e.g. if only the first 10 of 16 runs are complete.
-"""
-grid_search_result = agg_grid["result"]
-print(grid_search_result)
+print("Total aggregator via `grid_searches` & unique tag query = ", len(agg_grid_searches), "\n")
 
 """
-Reqest 2:
+The `GridSearchResult` is accessible via the database.
+"""
+grid_search_result = list(agg_grid_searches)[0]['result']
+print(grid_search_result.best_result)
+print(grid_search_result.log_evidences_native)
 
+"""
 From the GridSearch, get an aggregator which contains only the maximum log likelihood model. E.g. if the 10th out of the 
 16 cells was the best fit:
 """
-agg_best_fit = agg_grid.best_fits()
+agg_best_fit = agg_grid_searches.best_fits()
 print("Size of Agg best fit = ", len(agg_best_fit), "\n")
 instance = agg_best_fit.values("instance")[0]
 print(instance.gaussian.sigma)
@@ -177,8 +172,9 @@ Reqest 3:
 
 From the GridSearch, get an aggregator for any of the grid cells.
 """
-# cell_aggregator = agg_grid.cell_number(1)
-# print("Size of Agg cell = ", len(cell_aggregator), "\n")
+cell_aggregator = agg_grid_searches.cell_number(1)
+print(cell_aggregator)
+print("Size of Agg cell = ", cell_aggregator.values("samples"), "\n")
 
 """
 Stored and prints input parent grid of grid search.
