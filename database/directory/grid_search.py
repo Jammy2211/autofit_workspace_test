@@ -174,7 +174,7 @@ From the GridSearch, get an aggregator for any of the grid cells.
 """
 cell_aggregator = agg_grid_searches.cell_number(1)
 print(cell_aggregator)
-print("Size of Agg cell = ", cell_aggregator.values("samples"), "\n")
+print("Size of Agg cell = ", len(cell_aggregator), "\n")
 
 """
 Stored and prints input parent grid of grid search.

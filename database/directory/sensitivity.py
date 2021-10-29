@@ -380,12 +380,12 @@ Request 0:
 Test that we can retrieve an aggregator with only the sensitivity grid search results (I have tried using 
 the `grid_searches())` API below, but I dont know if this should be `sensitivity_searches` instead.
 """
-agg_grid = agg.grid_searches()
-print("Total aggregator via `grid_searches` query = ", len(agg_grid), "\n")
-unique_tag = agg_grid.search.unique_tag
-agg_qrid = agg_grid.query(unique_tag == "gaussian_x1")
+agg_grid_searches = agg.grid_searches()
+print("Total aggregator via `grid_searches` query = ", len(agg_grid_searches), "\n")
+unique_tag = agg_grid_searches.search.unique_tag
+agg_qrid = agg_grid_searches.query(unique_tag == "gaussian_x1")
 
-print("Total aggregator via `grid_searches` & unique tag query = ", len(agg_grid), "\n")
+print("Total aggregator via `grid_searches` & unique tag query = ", len(agg_grid_searches), "\n")
 
 """
 When we convert this generator to a list and it, the outputs are 3 different MCMCSamples instances. These correspond to 
@@ -403,24 +403,11 @@ Request 1:
 Make the `SensitivityResult` accessible via the database. Ideally, this would be accessible even when a Sensitivity 
 run is mid-run (e.g. if only the first 10 of 16 runs are complete.
 """
-sensitivity_result = agg_grid["result"]
-print(sensitivity_result)
+# sensitivity_result = list(agg_grid_searches)[0]['result']
+# print(sensitivity_result)
 
 """
 Reqest 2:
-
-From the Sensitivity, get an aggregator which contains only the maximum log likelihood model. E.g. if the 10th out of the 
-16 cells was the best fit:
-"""
-agg_best_fit = agg_grid.best_fits()
-print("Size of Agg best fit = ", len(agg_best_fit), "\n")
-instance = agg_best_fit.values("instance")[0]
-print(instance.gaussian.sigma)
-samples = agg_best_fit.values("samples")[0]
-print(samples)
-
-"""
-Reqest 3:
 
 From the Sensitivity, get an aggregator for the base or perturbed model of any of the grid cells.
 """
