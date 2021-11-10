@@ -94,7 +94,7 @@ dynesty = af.DynestyStatic(
 
 parent = af.DynestyStatic(name="parent")
 
-grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=4, number_of_cores=2)
+grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=2, number_of_cores=2)
 
 # grid_search_result = grid_search.fit(
 #     model=model, analysis=analysis, grid_priors=[model.gaussian.centre], parent=parent
@@ -120,6 +120,7 @@ start = time.time()
 agg.add_directory(directory=path.join("output", "database", "directory", dataset_name))
 print(f"Time to add directory to database {time.time() - start}")
 
+
 """
 Make sure database + agg can be used.
 """
@@ -143,6 +144,8 @@ print("Total Samples Objects via `name` model query = ", len(agg_query), "\n")
 Test that we can retrieve an aggregator with only the grid search results:
 """
 agg_grid_searches = agg.grid_searches()
+print(len(agg_grid_searches))
+stop
 print("Total aggregator via `grid_searches` query = ", len(agg_grid_searches), "\n")
 unique_tag = agg_grid_searches.search.unique_tag
 agg_qrid = agg_grid_searches.query(unique_tag == "gaussian_x1")
