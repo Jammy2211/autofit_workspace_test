@@ -94,11 +94,11 @@ dynesty = af.DynestyStatic(
 
 parent = af.DynestyStatic(name="parent")
 
-grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=2, number_of_cores=4)
+grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=4, number_of_cores=2)
 
-grid_search_result = grid_search.fit(
-    model=model, analysis=analysis, grid_priors=[model.gaussian.centre], parent=parent
-)
+# grid_search_result = grid_search.fit(
+#     model=model, analysis=analysis, grid_priors=[model.gaussian.centre], parent=parent
+# )
 
 """
 Scrape directory to create .sqlite file.
@@ -114,7 +114,7 @@ try:
 except FileNotFoundError:
     pass
 
-agg = Aggregator.from_database(database_file)
+agg = Aggregator.from_database(database_file, completed_only=False)
 
 start = time.time()
 agg.add_directory(directory=path.join("output", "database", "directory", dataset_name))

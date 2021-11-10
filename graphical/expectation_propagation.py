@@ -115,10 +115,11 @@ dynesty = af.DynestyStatic(
     name="expectation_propagation",
     nlive=100,
     sample="rwalk",
+    unique_tag="dataset_name"
 )
 
 analysis_factor_0 = g.AnalysisFactor(
-    prior_model=prior_model_0, analysis=analysis_0, optimiser=dynesty
+    prior_model=prior_model_0, analysis=analysis_0, optimiser=dynesty,
 )
 analysis_factor_1 = g.AnalysisFactor(
     prior_model=prior_model_1, analysis=analysis_1, optimiser=dynesty
