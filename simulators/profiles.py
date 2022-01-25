@@ -74,7 +74,7 @@ class Gaussian(Profile):
 
         self.sigma = sigma  # We still need to set sigma for the Gaussian, of course.
 
-    def profile_from_xvalues(self, xvalues):
+    def profile_1d_via_xvalues_from(self, xvalues):
         """
         Calculate the normalization of the profile on a line of Cartesian x coordinates.
 

@@ -96,9 +96,9 @@ parent = af.DynestyStatic(name="parent")
 
 grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=2, number_of_cores=2)
 
-# grid_search_result = grid_search.fit(
-#     model=model, analysis=analysis, grid_priors=[model.gaussian.centre], parent=parent
-# )
+grid_search_result = grid_search.fit(
+    model=model, analysis=analysis, grid_priors=[model.gaussian.centre], parent=parent
+)
 
 """
 Scrape directory to create .sqlite file.
@@ -144,18 +144,20 @@ print("Total Samples Objects via `name` model query = ", len(agg_query), "\n")
 Test that we can retrieve an aggregator with only the grid search results:
 """
 agg_grid_searches = agg.grid_searches()
-print(len(agg_grid_searches))
-stop
 print("Total aggregator via `grid_searches` query = ", len(agg_grid_searches), "\n")
 unique_tag = agg_grid_searches.search.unique_tag
 agg_qrid = agg_grid_searches.query(unique_tag == "gaussian_x1")
 
-print("Total aggregator via `grid_searches` & unique tag query = ", len(agg_grid_searches), "\n")
+print(
+    "Total aggregator via `grid_searches` & unique tag query = ",
+    len(agg_grid_searches),
+    "\n",
+)
 
 """
 The `GridSearchResult` is accessible via the database.
 """
-grid_search_result = list(agg_grid_searches)[0]['result']
+grid_search_result = list(agg_grid_searches)[0]["result"]
 print(grid_search_result.best_result)
 print(grid_search_result.log_evidences_native)
 

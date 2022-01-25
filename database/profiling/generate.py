@@ -27,10 +27,10 @@ def simulate_line_from_gaussian(instance):
     """
     try:
         model_line = sum(
-            [line.profile_from_xvalues(xvalues=xvalues) for line in instance]
+            [line.profile_1d_via_xvalues_from(xvalues=xvalues) for line in instance]
         )
     except TypeError:
-        model_line = instance.profile_from_xvalues(xvalues=xvalues)
+        model_line = instance.profile_1d_via_xvalues_from(xvalues=xvalues)
 
     """Determine the noise (at a specified signal to noise level) in every pixel of our model profile."""
     signal_to_noise_ratio = 25.0

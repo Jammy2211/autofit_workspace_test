@@ -112,10 +112,10 @@ nodes, one could easily use different searches for different nodes on the factor
 """
 dynesty = af.DynestyStatic(
     path_prefix=path.join("graphical"),
-   # name="expectation_propagation",
+    # name="expectation_propagation",
     nlive=100,
     sample="rwalk",
-    unique_tag="dataset_name"
+    unique_tag="dataset_name",
 )
 
 analysis_factor_0 = g.AnalysisFactor(

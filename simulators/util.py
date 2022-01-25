@@ -6,19 +6,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def simulate_line_from_gaussian(gaussian, dataset_path):
+def simulate_line_from_gaussian(gaussian, dataset_path, pixels=100):
 
     """
     Specify the number of pixels used to create the xvalues on which the 1D line of the profile is generated using and
     thus defining the number of data-points in our data.
     """
-    pixels = 100
     xvalues = np.arange(pixels)
 
-    """Evaluate this `Gaussian` model instance at every xvalues to create its model profile."""
-    model_line = gaussian.profile_from_xvalues(xvalues=xvalues)
+    """
+    Evaluate this `Gaussian` model instance at every xvalues to create its model profile.
+    """
+    model_line = gaussian.profile_1d_via_xvalues_from(xvalues=xvalues)
 
-    """Determine the noise (at a specified signal to noise level) in every pixel of our model profile."""
+    """
+    Determine the noise (at a specified signal to noise level) in every pixel of our model profile.
+    """
     signal_to_noise_ratio = 25.0
     noise = np.random.normal(0.0, 1.0 / signal_to_noise_ratio, pixels)
 

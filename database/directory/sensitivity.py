@@ -105,7 +105,7 @@ dynesty = af.DynestyStatic(
     nlive=25,
     unique_tag=dataset_name,
     session=session,
-    iterations_per_update=50000
+    iterations_per_update=50000,
 )
 
 result_single = dynesty.fit(model=model, analysis=analysis)
@@ -122,7 +122,7 @@ dynesty = af.DynestyStatic(
     nlive=25,
     unique_tag=dataset_name,
     session=session,
-    iterations_per_update=50000
+    iterations_per_update=50000,
 )
 
 result_multiple = dynesty.fit(model=model, analysis=analysis)
@@ -238,9 +238,9 @@ def simulate_function(instance):
     print(instance.perturbation.normalization)
     print(instance.perturbation.sigma)
 
-    model_line = instance.gaussian_main.profile_from_xvalues(
+    model_line = instance.gaussian_main.profile_1d_via_xvalues_from(
         xvalues=xvalues
-    ) + instance.perturbation.profile_from_xvalues(xvalues=xvalues)
+    ) + instance.perturbation.profile_1d_via_xvalues_from(xvalues=xvalues)
 
     """Determine the noise (at a specified signal to noise level) in every pixel of our model profile."""
     signal_to_noise_ratio = 25.0
@@ -279,7 +279,7 @@ search = af.DynestyStatic(
     nlive=25,
     unique_tag=dataset_name,
     session=session,
-    iterations_per_update=50000
+    iterations_per_update=50000,
 )
 
 """
@@ -385,7 +385,11 @@ print("Total aggregator via `grid_searches` query = ", len(agg_grid_searches), "
 unique_tag = agg_grid_searches.search.unique_tag
 agg_qrid = agg_grid_searches.query(unique_tag == "gaussian_x1")
 
-print("Total aggregator via `grid_searches` & unique tag query = ", len(agg_grid_searches), "\n")
+print(
+    "Total aggregator via `grid_searches` & unique tag query = ",
+    len(agg_grid_searches),
+    "\n",
+)
 
 """
 When we convert this generator to a list and it, the outputs are 3 different MCMCSamples instances. These correspond to 

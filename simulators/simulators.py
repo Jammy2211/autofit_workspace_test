@@ -19,3 +19,10 @@ __Gaussian x1__
 dataset_path = path.join("dataset", "example_1d", "gaussian_x1")
 gaussian = profiles.Gaussian(centre=50.0, normalization=25.0, sigma=10.0)
 util.simulate_line_from_gaussian(gaussian=gaussian, dataset_path=dataset_path)
+
+"""
+__Gaussian x1 (100000 pixels)__
+"""
+dataset_path = path.join("dataset", "example_1d", "gaussian_x1__100000_pixels")
+gaussian = profiles.Gaussian(centre=50000.0, normalization=25.0, sigma=10.0)
+util.simulate_line_from_gaussian(gaussian=gaussian, dataset_path=dataset_path, pixels=1000000)
