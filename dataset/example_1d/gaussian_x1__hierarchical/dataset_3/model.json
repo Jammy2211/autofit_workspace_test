@@ -1,0 +1,6 @@
+{
+    "type": "autofit.example.model.Gaussian",
+    "centre": 53.62947730683016,
+    "normalization": 0.5,
+    "sigma": 5.0
+}
