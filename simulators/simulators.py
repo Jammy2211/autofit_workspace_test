@@ -134,12 +134,12 @@ util.simulate_dataset_1d_via_profile_list_from(
 """
 __Gaussian x1 Multi__
 """
-dataset_path = path.join("dataset", "example_1d", "gaussian_multi_0")
+dataset_path = path.join("dataset", "example_1d", "gaussian_x1_multi", "dataset_0")
 gaussian_0 = af.ex.Gaussian(centre=50.0, normalization=50.0, sigma=10.0)
 util.simulate_data_1d_with_kernel_via_gaussian_from(
     gaussian=gaussian, dataset_path=dataset_path
 )
-dataset_path = path.join("dataset", "example_1d", "gaussian_multi_1")
+dataset_path = path.join("dataset", "example_1d", "gaussian_x1_multi", "dataset_1")
 gaussian_1 = af.ex.Gaussian(centre=50.0, normalization=50.0, sigma=20.0)
 util.simulate_dataset_1d_via_profile_list_from(
     profile_list=[gaussian_0, gaussian_1], dataset_path=dataset_path
