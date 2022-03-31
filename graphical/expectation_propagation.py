@@ -119,13 +119,13 @@ dynesty = af.DynestyStatic(
 )
 
 analysis_factor_0 = g.AnalysisFactor(
-    prior_model=prior_model_0, analysis=analysis_0, optimiser=dynesty, name="dataset_0"
+    prior_model=prior_model_0, analysis=analysis_0, search=dynesty, name="dataset_0"
 )
 analysis_factor_1 = g.AnalysisFactor(
-    prior_model=prior_model_1, analysis=analysis_1, optimiser=dynesty, name="dataset_0"
+    prior_model=prior_model_1, analysis=analysis_1, search=dynesty, name="dataset_0"
 )
 analysis_factor_2 = g.AnalysisFactor(
-    prior_model=prior_model_2, analysis=analysis_2, optimiser=dynesty, name="dataset_0"
+    prior_model=prior_model_2, analysis=analysis_2, search=dynesty, name="dataset_0"
 )
 
 """
@@ -167,7 +167,7 @@ A crucial part of EP is message passing.
 from autofit.graphical import optimise
 
 laplace = optimise.LaplaceFactorOptimiser()
-collection = factor_graph.optimise(laplace)
+collection = factor_graph.fit(laplace)
 
 print(collection)
 

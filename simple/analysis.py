@@ -37,12 +37,12 @@ class Analysis(af.Analysis):
 
         Parameters
         ----------
-        instance : model.Gaussian
+        instance
             The `Gaussian` model instance.
 
-        Returnsn
+        Returns
         -------
-        fit : Fit.log_likelihood
+        fit
             The log likelihood value indicating how well this model fit the dataset.
 
         The `instance` that comes into this method is an instance of the `Gaussian` class. To convince yourself of this,

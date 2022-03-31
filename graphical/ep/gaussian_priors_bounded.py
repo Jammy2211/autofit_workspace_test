@@ -45,7 +45,7 @@ for data, noise_map in zip(data_list, noise_map_list):
 """
 __Model__
 """
-centre_shared_prior = af.GaussianPrior(mean=50.0, sigma=30.0)
+centre_shared_prior = af.GaussianPrior(mean=50.0, sigma=30.0, lower_limit=0.0, upper_limit=100.0)
 
 model_list = []
 
@@ -55,8 +55,8 @@ for model_index in range(len(data_list)):
 
     gaussian.centre = centre_shared_prior
 
-    gaussian.normalization = af.GaussianPrior(mean=3.0, sigma=5.0)
-    gaussian.sigma = af.GaussianPrior(mean=10.0, sigma=10.0)
+    gaussian.normalization = af.GaussianPrior(mean=3.0, sigma=5.0, lower_limit=0.0, upper_limit=50.0)
+    gaussian.sigma = af.GaussianPrior(mean=10.0, sigma=10.0, lower_limit=0.0, upper_limit=100.0)
 
     model_list.append(gaussian)
 
@@ -92,12 +92,12 @@ laplace = af.LaplaceOptimiser()
 
 paths = af.DirectoryPaths(
     name=path.join(
-        "ep", "gaussian_priors"
+        "ep", "gaussian_priors_bounded"
     )
 )
 
 factor_graph_result = factor_graph.optimise(
-    optimiser=laplace, paths=paths, ep_history=af.EPHistory(kl_tol=0.2)
+    optimiser=laplace, paths=paths, ep_history=af.EPHistory(kl_tol=0.05)
 )
 
 """

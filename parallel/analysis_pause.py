@@ -33,37 +33,23 @@ def main():
     """
     __Paths__
     """
-    dataset_name = "gaussian_x1__100000_pixels"
-    path_prefix = path.join("parallel")
 
-    """
-    __Data__
-    
-    This example fits a single 1D Gaussian, we therefore load and plot data containing one Gaussian.
-    """
-    dataset_path = path.join("dataset", "example_1d", dataset_name)
-    data = af.util.numpy_array_from_json(file_path=path.join(dataset_path, "data.json"))
-    noise_map = af.util.numpy_array_from_json(
-        file_path=path.join(dataset_path, "noise_map.json")
-    )
+    class Analysis(af.Analysis):
+        def __init__(self):
 
-    """
-    __Model + Analysis__
-    
-    We create the model and analysis, which in this example is a single `Gaussian` and therefore has dimensionality N=3.
-    """
-    model = af.Model(af.ex.Gaussian)
+            super().__init__()
 
-    model.centre = af.UniformPrior(lower_limit=490000., upper_limit=500000.)
-    model.normalization = af.UniformPrior(lower_limit=24.0, upper_limit=26.0)
-    model.sigma = af.UniformPrior(lower_limit=9.0, upper_limit=11.0)
 
-    instance = model.instance_from_prior_medians()
+        def log_likelihood_function(self, instance):
+
+            time.sleep(0.48/8)
+
+            return 1.0
 
     total_analyses = 8
 
     analysis_list = [
-        af.ex.Analysis(data=data, noise_map=noise_map) for i in range(total_analyses)
+        Analysis() for i in range(total_analyses)
     ]
 
     analysis = sum(analysis_list)
@@ -73,12 +59,12 @@ def main():
     
     Time the analysis LH functions both individually and in parallel.
     """
-    repeats = 10
+    repeats = 2
 
     start = time.time()
     for repeat in range(repeats):
         [
-            analysis_list[i].log_likelihood_function(instance=instance)
+            analysis_list[i].log_likelihood_function(instance=None)
             for i in range(total_analyses)
         ]
     lh_time_serial = (time.time() - start) / repeats
@@ -86,15 +72,11 @@ def main():
         f"Time To Evaluate LH of {total_analyses} Analysis objects in serial = {lh_time_serial} \n"
     )
 
-    # This will use multiprocessing, should be 8 times faster.
-
     analysis.n_cores = 8
 
     start = time.time()
     for repeat in range(repeats):
-        analysis.log_likelihood_function(
-            instance=instance
-        )
+        analysis.log_likelihood_function(instance=None)
     lh_time_parallel = (time.time() - start) / repeats
     print(
         f"Time To Evaluate LH of {total_analyses} Analysis objects in parallel = {lh_time_parallel} \n"

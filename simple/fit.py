@@ -56,7 +56,10 @@ model component.
 We can overwrite priors before running the `NonLinearSearch` as shown below.
 """
 model.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-model.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
+model.normalization = af.GaussianPrior(
+    mean=10.0, sigma=5.0, lower_limit=0.0, upper_limit=np.inf
+)
+
 model.sigma = af.GaussianPrior(
     mean=10.0, sigma=5.0, lower_limit=0.0, upper_limit=np.inf
 )
