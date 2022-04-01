@@ -70,10 +70,9 @@ Next, we create our model, which in this case corresponds to a single Gaussian.
 model = af.Model(af.ex.Gaussian)
 
 """
-We now make the `sigma` a free parameter across every analysis object.
+We now make the `normalization` and `sigma` a free parameter across every analysis object.
 """
-analysis = analysis.with_free_parameters(model.sigma)
-analysis = analysis.with_free_parameters(model.normalization)
+analysis = analysis.with_free_parameters(*[model.sigma, model.normalization])
 
 """
 __Search__

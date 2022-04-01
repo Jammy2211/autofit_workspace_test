@@ -55,7 +55,7 @@ for data, noise_map in zip(data_list, noise_map_list):
 """
 __Model__
 """
-centre_shared_prior = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
+centre_shared_prior = af.UniformPrior(lower_limit=0.1, upper_limit=100.0)
 
 model_list = []
 
@@ -64,8 +64,8 @@ for model_index in range(len(data_list)):
     gaussian = af.Model(af.ex.Gaussian)
 
     gaussian.centre = centre_shared_prior  # This prior is used by all 3 Gaussians!
-    gaussian.normalization = af.UniformPrior(lower_limit=0.0, upper_limit=1e2)
-    gaussian.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=25.0)
+    gaussian.normalization = af.UniformPrior(lower_limit=0.1, upper_limit=1e2)
+    gaussian.sigma = af.UniformPrior(lower_limit=0.1, upper_limit=25.0)
 
     model_list.append(gaussian)
 
