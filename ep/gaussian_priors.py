@@ -9,12 +9,12 @@ import autofit as af
 """
 __Dataset__
 """
-total_gaussians = 5
+total_datasets = 5
 
 data_list = []
 noise_map_list = []
 
-for dataset_index in range(total_gaussians):
+for dataset_index in range(total_datasets):
 
     dataset_name = f"dataset_{dataset_index}"
 

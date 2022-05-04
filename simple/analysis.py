@@ -57,7 +57,7 @@ class Analysis(af.Analysis):
         xvalues = np.arange(self.data.shape[0])
 
         """Use these xvalues to create model data of our Gaussian."""
-        model_data = instance.profile_1d_via_xvalues_from(xvalues=xvalues)
+        model_data = instance.model_data_1d_via_xvalues_from(xvalues=xvalues)
 
         """Fit the model gaussian line data to the observed data, computing the residuals and chi-squareds."""
         residual_map = self.data - model_data
@@ -76,7 +76,7 @@ class Analysis(af.Analysis):
 
         xvalues = np.arange(self.data.shape[0])
 
-        model_data = instance.profile_1d_via_xvalues_from(xvalues=xvalues)
+        model_data = instance.model_data_1d_via_xvalues_from(xvalues=xvalues)
 
         plt.errorbar(
             x=xvalues,

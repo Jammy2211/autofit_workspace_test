@@ -81,6 +81,6 @@ result_list = dynesty.fit(model=model, analysis=analysis)
 """
 __Result__
 """
-model_data = result_list[0].max_log_likelihood_instance.profile_1d_via_xvalues_from(
+model_data = result_list[0].max_log_likelihood_instance.model_data_1d_via_xvalues_from(
     xvalues=np.arange(data.shape[0])
 )

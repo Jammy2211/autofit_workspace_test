@@ -212,7 +212,7 @@ print("Sigma = ", max_log_likelihood_instance.sigma, "\n")
 For our example problem of fitting a 1D `Gaussian` profile, this makes it straight forward to plot the maximum
 likelihood model:
 """
-model_data = samples.max_log_likelihood_instance.profile_1d_via_xvalues_from(
+model_data = samples.max_log_likelihood_instance.model_data_1d_via_xvalues_from(
     xvalues=np.arange(data.shape[0])
 )
 

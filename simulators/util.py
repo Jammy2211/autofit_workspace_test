@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def simulate_dataset_1d_via_gaussian_from(gaussian, dataset_path):
+def simulate_dataset_1d_via_gaussian_from(gaussian, dataset_path, signal_to_noise_ratio = 25.0):
 
     """
     Specify the number of pixels used to create the xvalues on which the 1D line of the profile is generated using and
@@ -18,12 +18,12 @@ def simulate_dataset_1d_via_gaussian_from(gaussian, dataset_path):
     """
     Evaluate this `Gaussian` model instance at every xvalues to create its model profile.
     """
-    model_profile_1d = gaussian.profile_1d_via_xvalues_from(xvalues=xvalues)
+    model_profile_1d = gaussian.model_data_1d_via_xvalues_from(xvalues=xvalues)
 
     """
     Determine the noise (at a specified signal to noise level) in every pixel of our model profile.
     """
-    signal_to_noise_ratio = 25.0
+
     noise = np.random.normal(0.0, 1.0 / signal_to_noise_ratio, pixels)
 
     """
@@ -71,7 +71,7 @@ def simulate_dataset_1d_via_gaussian_from(gaussian, dataset_path):
         json.dump(gaussian.dict(), f, indent=4)
 
 
-def simulate_data_1d_with_kernel_via_gaussian_from(gaussian, dataset_path):
+def simulate_data_1d_with_kernel_via_gaussian_from(gaussian, dataset_path, signal_to_noise_ratio = 25.0):
 
     """
     Specify the number of pixels used to create the xvalues on which the 1D line of the profile is generated using and
@@ -83,7 +83,7 @@ def simulate_data_1d_with_kernel_via_gaussian_from(gaussian, dataset_path):
     """
     Evaluate this `Gaussian` model instance at every xvalues to create its model profile.
     """
-    model_profile_1d = gaussian.profile_1d_via_xvalues_from(xvalues=xvalues)
+    model_profile_1d = gaussian.model_data_1d_via_xvalues_from(xvalues=xvalues)
 
     """
     Determine the noise (at a specified signal to noise level) in every pixel of our model profile.
@@ -107,7 +107,6 @@ def simulate_data_1d_with_kernel_via_gaussian_from(gaussian, dataset_path):
     """
     Create a Gaussian kernel which the model line will be convolved with.
     """
-    signal_to_noise_ratio = 25.0
     noise = np.random.normal(0.0, 1.0 / signal_to_noise_ratio, pixels)
 
     """
@@ -174,7 +173,7 @@ def simulate_dataset_1d_via_profile_list_from(profile_list, dataset_path):
 
     for profile in profile_list:
 
-        model_profile_1d += profile.profile_1d_via_xvalues_from(xvalues=xvalues)
+        model_profile_1d += profile.model_data_1d_via_xvalues_from(xvalues=xvalues)
 
     """
     Determine the noise (at a specified signal to noise level) in every pixel of our model profile.
@@ -246,7 +245,7 @@ def simulate_data_1d_with_kernel_via_profile_list_from(profile_list, dataset_pat
 
     for profile in profile_list:
 
-        model_profile_1d += profile.profile_1d_via_xvalues_from(xvalues=xvalues)
+        model_profile_1d += profile.model_data_1d_via_xvalues_from(xvalues=xvalues)
 
     """
     Create a Gaussian kernel which the model line will be convolved with.
