@@ -68,7 +68,7 @@ gaussian_parent_model = af.Model(
 for i in range(total_datasets):
 
     dataset_path = path.join(
-        "dataset", "example_1d", f"gaussian_x1__hierarchical", f"dataset_{i}__snr_{signal_to_noise_ratio}"
+        "dataset", "example_1d", f"gaussian_x1__hierarchical", f"dataset_{i}"
     )
 
     gaussian = gaussian_parent_model.random_instance()

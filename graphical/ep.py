@@ -86,19 +86,6 @@ for dataset_index in range(total_datasets):
     noise_map_list.append(noise_map)
 
 """
-By plotting the Gaussians we can remind ourselves that determining their centres by eye is difficult.
-"""
-for dataset_name, data in zip(dataset_name_list, data_list):
-
-    af.ex.plot_profile_1d(
-        xvalues=np.arange(data.shape[0]),
-        profile_1d=data,
-        title=dataset_name,
-        ylabel="Data Values",
-        color="k",
-    )
-
-"""
 __Analysis__
 
 For each dataset we now create a corresponding `Analysis` class, like in the previous tutorial.
@@ -118,8 +105,8 @@ We now compose the graphical model that we fit, using the `Model` and `Collectio
 
 We will assume all Gaussians share the same centre, therefore we set up a shared prior for `centre`.
 """
-# centre_shared_prior = af.GaussianPrior(mean=50.0, sigma=30.0)
-centre_shared_prior = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
+centre_shared_prior = af.GaussianPrior(mean=50.0, sigma=30.0)
+# centre_shared_prior = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
 
 model_list = []
 
@@ -129,11 +116,11 @@ for model_index in range(len(data_list)):
 
     gaussian.centre = centre_shared_prior  # This prior is used by all 3 Gaussians!
 
-    # gaussian.normalization = af.GaussianPrior(mean=3.0, sigma=5.0, lower_limit=0.0)
-    # gaussian.sigma = af.GaussianPrior(mean=10.0, sigma=10.0, lower_limit=0.0)
-
-    gaussian.normalization = af.UniformPrior(lower_limit=0.0, upper_limit=10.0)
-    gaussian.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=50.0)
+    gaussian.normalization = af.GaussianPrior(mean=3.0, sigma=5.0, lower_limit=0.0)
+    gaussian.sigma = af.GaussianPrior(mean=10.0, sigma=10.0, lower_limit=0.0)
+    #
+    # gaussian.normalization = af.UniformPrior(lower_limit=0.0, upper_limit=10.0)
+    # gaussian.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=50.0)
 
     model_list.append(gaussian)
 
