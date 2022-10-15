@@ -62,7 +62,6 @@ We first fit the 1D Gaussians which all share the same centre, thus not requirin
 An example for fitting the hierarchical model with EP is given at the end of this tutorial.
 """
 total_datasets = 2
-signal_to_noise_ratio = 5.0
 
 dataset_name_list = []
 data_list = []
@@ -73,7 +72,7 @@ for dataset_index in range(total_datasets):
     dataset_name = f"dataset_{dataset_index}"
 
     dataset_path = path.join(
-        "dataset", "example_1d", "gaussian_x1__sample", f"{dataset_name}__snr_{signal_to_noise_ratio}"
+        "dataset", "example_1d", "gaussian_x1__sample", dataset_name
     )
 
     data = af.util.numpy_array_from_json(file_path=path.join(dataset_path, "data.json"))

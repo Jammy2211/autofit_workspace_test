@@ -45,7 +45,7 @@ for dataset_index in range(total_datasets):
     dataset_name = f"dataset_{dataset_index}"
 
     dataset_path = path.join(
-        "dataset", "example_1d", "gaussian_x1__low_snr", dataset_name
+        "dataset", "example_1d", "gaussian_x1__sample", dataset_name
     )
 
     data = af.util.numpy_array_from_json(file_path=path.join(dataset_path, "data.json"))
@@ -179,10 +179,10 @@ print(f"Value of centre via joint PDF = {50.0}")
 print(f"Error on centre via joint PDF (2 sigma) = {5.0}")
 
 instance = result.samples.median_pdf_instance
-print(f"Value of centre via graphical model = {instance[0].centre}")
+print(f"Value of centre via graphical model = {instance[0].gaussian.centre}")
 
 error_instance = result.samples.error_instance_at_sigma(sigma=2.0)
-print(f"Error on centre via graphical model (2 sigma) = {error_instance[0].centre}")
+print(f"Error on centre via graphical model (2 sigma) = {error_instance[0].gaussian.centre}")
 
 """
 __Wrap Up__

@@ -32,7 +32,7 @@ though this would be syntactically cleaner code. This is to make the API for set
 tutorial clear and explicit; in the next tutorial we will introduce  the **PyAutoFit** API for setting up a graphical 
 model for large datasets concisely.
 """
-total_datasets = 3
+total_datasets = 2
 
 dataset_path = path.join("dataset", "example_1d")
 

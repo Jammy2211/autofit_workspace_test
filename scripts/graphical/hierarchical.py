@@ -45,7 +45,7 @@ for dataset_index in range(total_datasets):
     dataset_name = f"dataset_{dataset_index}"
 
     dataset_path = path.join(
-        "dataset", "example_1d", "gaussian_x1__low_snr", dataset_name
+        "dataset", "example_1d", "gaussian_x1__sample", dataset_name
     )
 
     data = af.util.numpy_array_from_json(file_path=path.join(dataset_path, "data.json"))
@@ -70,25 +70,16 @@ for data, noise_map in zip(data_list, noise_map_list):
 
     analysis_list.append(analysis)
 
-
 """
-__Model__
+__Model Individual Factors__
 
-We now compose the graphical model that we fit, using the `Model` object you are now familiar with.
+We first set up a model for each `Gaussian` which is individually fitted to each 1D dataset, which forms the
+factors on the factor graph we compose. 
 
-We begin by setting up a shared prior for `centre`. 
+This uses a nearly identical for loop to the previous tutorial, however a shared `centre` is no longer used and each 
+`Gaussian` is given its own prior for the `centre`. 
 
-We set up this up as a single `GaussianPrior` which is passed to separate `Model`'s for each `Gaussian` below.
-"""
-centre_shared_prior = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-
-"""
-We now set up three `Model`'s, each of which contain a `Gaussian` that is used to fit each of the 
-datasets we loaded above.
-
-All three of these `Model`'s use the `centre_shared_prior`. This means all three model-components use 
-the same value of `centre` for every model composed and fitted by the `NonLinearSearch`, reducing the dimensionality 
-of parameter space from N=9 (e.g. 3 parameters per Gaussian) to N=7.
+We will see next how this `centre` is used to construct the hierachical model.
 """
 model_list = []
 
@@ -96,9 +87,9 @@ for model_index in range(len(data_list)):
 
     gaussian = af.Model(af.ex.Gaussian)
 
+    gaussian.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
     gaussian.normalization = af.UniformPrior(lower_limit=0.0, upper_limit=10.0)
     gaussian.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=50.0)
-    gaussian.centre = centre_shared_prior  # This prior is used by all 3 Gaussians!
 
     model = af.Collection(gaussian=gaussian)
 
@@ -131,28 +122,54 @@ for model, analysis in zip(model_list, analysis_list):
 
     analysis_factor_list.append(analysis_factor)
 
+
+"""
+__Model__
+
+We now compose the hierarchical model that we fit, using the individual Gaussian model components created above.
+
+We first create a `HierarchicalFactor`, which represents the parent Gaussian distribution from which we will assume 
+that the `centre` of each individual `Gaussian` dataset is drawn. 
+
+For this parent `Gaussian`, we have to place priors on its `mean` and `sigma`, given that they are parameters in our
+model we are ultimately fitting for.
+"""
+
+# hierarchical_factor = af.HierarchicalFactor(
+#     af.GaussianPrior,
+#     mean=af.GaussianPrior(mean=50.0, sigma=10, lower_limit=0.0, upper_limit=100.0),
+#     sigma=af.GaussianPrior(mean=10.0, sigma=5.0, lower_limit=0.0, upper_limit=100.0),
+# )
+
+hierarchical_factor = af.HierarchicalFactor(
+    af.GaussianPrior,
+    mean=af.UniformPrior(lower_limit=0.0, upper_limit=100.0),
+    sigma=af.UniformPrior(lower_limit=0.0, upper_limit=100.0),
+)
+
+"""
+We now add each of the individual model `Gaussian`'s `centre` parameters to the `hierarchical_factor`.
+
+This composes the hierarchical model whereby the individual `centre` of every `Gaussian` in our dataset is now assumed 
+to be drawn from a shared parent distribution. It is the `mean` and `sigma` of this distribution we are hoping to 
+estimate.
+"""
+
+for model in model_list:
+
+    hierarchical_factor.add_drawn_variable(model.gaussian.centre)
+
 """
 __Factor Graph__
 
-We combine our `AnalysisFactor`'s into one, to compose a factor graph.
+We now create the factor graph for this model, using the list of `AnalysisFactor`'s and the hierarchical factor.
 
-So, what is a factor graph?
-
-A factor graph defines the graphical model we have composed. For example, it defines the different model components 
-that make up our model (e.g. the three `Gaussian` classes) and how their parameters are linked or shared (e.g. that
-each `Gaussian` has its own unique `normalization` and `centre`, but a shared `sigma` parameter.
-
-This is what our factor graph looks like: 
-
-The factor graph above is made up of two components:
-
-- Nodes: these are points on the graph where we have a unique set of data and a model that is made up of a subset of 
-our overall graphical model. This is effectively the `AnalysisFactor` objects we created above. 
-
-- Links: these define the model components and parameters that are shared across different nodes and thus retain the 
-same values when fitting different datasets.
+Note that in previous tutorials, when we created the `FactorGraphModel` we only passed the list of `AnalysisFactor`'s,
+which contained the necessary information on the model create the factor graph that was fitted. The `AnalysisFactor`'s
+were created before we composed the `HierachicalFactor` and we pass it separately when composing the factor graph.
 """
-factor_graph = af.FactorGraphModel(*analysis_factor_list)
+
+factor_graph = af.FactorGraphModel(*analysis_factor_list, hierarchical_factor)
 
 """
 __Search__
@@ -160,7 +177,7 @@ __Search__
 We can now create a non-linear search and used it to the fit the factor graph, using its `global_prior_model` property.
 """
 search = af.DynestyStatic(
-    path_prefix=path.join("graphical"), name="simultaneous", sample="rwalk"
+    path_prefix=path.join("graphical"), name="hierarchical", sample="rwalk"
 )
 
 result = search.fit(model=factor_graph.global_prior_model, analysis=factor_graph)
@@ -179,10 +196,10 @@ print(f"Value of centre via joint PDF = {50.0}")
 print(f"Error on centre via joint PDF (2 sigma) = {5.0}")
 
 instance = result.samples.median_pdf_instance
-print(f"Value of centre via graphical model = {instance[0].centre}")
+print(f"Value of centre via graphical model = {instance[0].gaussian.centre}")
 
 error_instance = result.samples.error_instance_at_sigma(sigma=2.0)
-print(f"Error on centre via graphical model (2 sigma) = {error_instance[0].centre}")
+print(f"Error on centre via graphical model (2 sigma) = {error_instance[0].gaussian.centre}")
 
 """
 __Wrap Up__
