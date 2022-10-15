@@ -208,7 +208,7 @@ laplace = af.LaplaceOptimiser()
 
 paths = af.DirectoryPaths(
     name=path.join(
-        "howtofit", "chapter_graphical_models", "tutorial_4_expectation_propagation"
+        "howtofit", "chapter_graphical_models", "tutorial_5_expectation_propagation"
     )
 )
 
@@ -221,7 +221,7 @@ factor_graph_result = factor_graph.optimise(
 __Output__
 
 The results of the factor graph, using the EP framework and message passing, are contained in the folder 
-`output/howtofit/chapter_graphical_models/tutorial_4_expectation_propagation`. 
+`output/howtofit/chapter_graphical_models/tutorial_5_expectation_propagation`. 
 
 The following folders and files are worth of note:
 

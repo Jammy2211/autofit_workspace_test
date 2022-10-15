@@ -32,6 +32,18 @@ noise_map = af.util.numpy_array_from_json(
     file_path=path.join(dataset_path, "noise_map.json")
 )
 
+plt.errorbar(
+    x=range(data.shape[0]),
+    y=data,
+    yerr=noise_map,
+    color="k",
+    ecolor="k",
+    elinewidth=1,
+    capsize=2,
+)
+plt.show()
+plt.close()
+
 """
 __Model + Analysis__
 
@@ -55,19 +67,48 @@ We manually specify all of the Dynesty settings, descriptions of which are provi
  https://dynesty.readthedocs.io/en/latest/api.html
  https://dynesty.readthedocs.io/en/latest/api.html#module-dynesty.nestedsamplers
 """
-dynesty = af.DynestyStatic(
-    path_prefix="chaining_limits",
-    name="search[1]",
+search = af.DynestyStatic(
+    path_prefix="searches",
+    name="DynestyStatic",
+    nlive=50,
+    bound="multi",
+    sample="auto",
+    bootstrap=None,
+    enlarge=None,
+    update_interval=None,
+    walks=25,
+    facc=0.5,
+    slices=5,
+    fmove=0.9,
+    max_move=100,
+    iterations_per_update=25,
+    number_of_cores=2,
 )
 
-result = dynesty.fit(model=model, analysis=analysis)
+result = search.fit(model=model, analysis=analysis)
 
+"""
+__Result__
 
-model = result.model
-
-dynesty = af.DynestyStatic(
-    path_prefix="chaining_limits",
-    name="search[2]",
+The result object returned by the fit provides information on the results of the non-linear search. Lets use it to
+compare the maximum log likelihood `Gaussian` to the data.
+"""
+model_data = result.max_log_likelihood_instance.model_data_1d_via_xvalues_from(
+    xvalues=np.arange(data.shape[0])
 )
 
-result = dynesty.fit(model=model, analysis=analysis)
+plt.errorbar(
+    x=range(data.shape[0]),
+    y=data,
+    yerr=noise_map,
+    color="k",
+    ecolor="k",
+    elinewidth=1,
+    capsize=2,
+)
+plt.plot(range(data.shape[0]), model_data, color="r")
+plt.title("DynestyStatic model fit to 1D Gaussian dataset.")
+plt.xlabel("x values of profile")
+plt.ylabel("Profile normalization")
+plt.show()
+plt.close()
