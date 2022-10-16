@@ -24,9 +24,7 @@ conf.instance.push(new_path=path.join(cwd, "config", "searches"))
 
 import autofit as af
 
-logging.basicConfig(
-    level=logging.INFO
-)
+logging.basicConfig(level=logging.INFO)
 
 
 def main():
@@ -54,7 +52,7 @@ def main():
     """
     model = af.Model(af.ex.Gaussian)
 
-    model.centre = af.UniformPrior(lower_limit=490000., upper_limit=500000.)
+    model.centre = af.UniformPrior(lower_limit=490000.0, upper_limit=500000.0)
     model.normalization = af.UniformPrior(lower_limit=24.0, upper_limit=26.0)
     model.sigma = af.UniformPrior(lower_limit=9.0, upper_limit=11.0)
 
@@ -92,9 +90,7 @@ def main():
 
     start = time.time()
     for repeat in range(repeats):
-        analysis.log_likelihood_function(
-            instance=instance
-        )
+        analysis.log_likelihood_function(instance=instance)
     lh_time_parallel = (time.time() - start) / repeats
     print(
         f"Time To Evaluate LH of {total_analyses} Analysis objects in parallel = {lh_time_parallel} \n"

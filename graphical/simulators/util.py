@@ -69,5 +69,3 @@ def simulate_dataset_1d_via_gaussian_from(gaussian, dataset_path):
 
     with open(model_file, "w+") as f:
         json.dump(gaussian.dict(), f, indent=4)
-
-

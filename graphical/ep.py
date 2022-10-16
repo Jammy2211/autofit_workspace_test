@@ -73,7 +73,10 @@ for dataset_index in range(total_datasets):
     dataset_name = f"dataset_{dataset_index}"
 
     dataset_path = path.join(
-        "dataset", "example_1d", "gaussian_x1__sample", f"{dataset_name}__snr_{signal_to_noise_ratio}"
+        "dataset",
+        "example_1d",
+        "gaussian_x1__sample",
+        f"{dataset_name}__snr_{signal_to_noise_ratio}",
     )
 
     data = af.util.numpy_array_from_json(file_path=path.join(dataset_path, "data.json"))
