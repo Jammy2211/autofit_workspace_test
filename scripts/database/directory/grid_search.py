@@ -127,7 +127,7 @@ Make sure database + agg can be used.
 samples_gen = agg.values("samples")
 
 """
-When we convert this generator to a list and it, the outputs are 3 different MCMCSamples instances. These correspond to 
+When we convert this generator to a list and it, the outputs are 3 different SamplesMCMC instances. These correspond to 
 the 3 model-fits performed above.
 """
 start = time.time()

@@ -1,5 +1,5 @@
 {
-    "SphNFW": {
+    "NFWSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -57,7 +57,7 @@
             }
         }
     },
-    "EllNFW": {
+    "NFW": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -88,7 +88,7 @@
                 "upper": "inf"
             }
         },
-        "elliptical_comps_0": {
+        "ell_comps_0": {
             "type": "Gaussian",
             "mean": 0.0,
             "sigma": 0.3,
@@ -103,7 +103,7 @@
                 "upper": 1.0
             }
         },
-        "elliptical_comps_1": {
+        "ell_comps_1": {
             "type": "Gaussian",
             "mean": 0.0,
             "sigma": 0.3,
@@ -145,7 +145,7 @@
             }
         }
     },
-    "SphNFWMCRDuffy": {
+    "NFWMCRDuffySph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -216,7 +216,7 @@
             }
         }
     },
-    "SphNFWMCRLudlow": {
+    "NFWMCRLudlowSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -318,7 +318,7 @@
                 "upper": "inf"
             }
         },
-        "elliptical_comps_0": {
+        "ell_comps_0": {
             "type": "Gaussian",
             "mean": 0.0,
             "sigma": 0.3,
@@ -333,7 +333,7 @@
                 "upper": 1.0
             }
         },
-        "elliptical_comps_1": {
+        "ell_comps_1": {
             "type": "Gaussian",
             "mean": 0.0,
             "sigma": 0.3,
@@ -403,7 +403,7 @@
             }
         }
     },
-    "SphNFWMCRScatterLudlow": {
+    "NFWMCRScatterLudlowSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -489,7 +489,7 @@
             }
         }
     },
-    "SphNFWTruncated": {
+    "NFWTruncatedSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -560,7 +560,7 @@
             }
         }
     },
-    "SphNFWTruncatedMCRDuffy": {
+    "NFWTruncatedMCRDuffySph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -631,7 +631,7 @@
             }
         }
     },
-    "SphNFWTruncatedMCRLudlow": {
+    "NFWTruncatedMCRLudlowSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -702,7 +702,7 @@
             }
         }
     },
-    "SphNFWTruncatedMCRScatterLudlow": {
+    "NFWTruncatedMCRScatterLudlowSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -788,7 +788,7 @@
             }
         }
     },
-    "SphNFWGeneralized": {
+    "gNFWSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -859,7 +859,7 @@
             }
         }
     },
-    "EllNFWGeneralized": {
+    "gNFW": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -890,7 +890,7 @@
                 "upper": "inf"
             }
         },
-        "elliptical_comps_0": {
+        "ell_comps_0": {
             "type": "Gaussian",
             "mean": 0.0,
             "sigma": 0.3,
@@ -905,7 +905,7 @@
                 "upper": 1.0
             }
         },
-        "elliptical_comps_1": {
+        "ell_comps_1": {
             "type": "Gaussian",
             "mean": 0.0,
             "sigma": 0.3,
