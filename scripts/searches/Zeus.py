@@ -90,7 +90,7 @@ search = af.Zeus(
     shuffle_ensemble=True,
     light_mode=False,
     iterations_per_update=501,
-    number_of_cores=2,
+    number_of_cores=1,
 )
 
 result = search.fit(model=model, analysis=analysis)

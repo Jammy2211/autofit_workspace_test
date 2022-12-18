@@ -87,14 +87,15 @@ direct output to the `.sqlite` file.
 dynesty = af.DynestyStatic(
     name="grid_search",
     path_prefix=path.join("database", "directory"),
-    number_of_cores=4,
+    number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
+    force_x1_cpu=True  # ensures parallelizing over grid search works.
 )
 
 parent = af.DynestyStatic(name="parent")
 
-grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=2, number_of_cores=2)
+grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=2, number_of_cores=1)
 
 grid_search_result = grid_search.fit(
     model=model, analysis=analysis, grid_priors=[model.gaussian.centre], parent=parent
