@@ -67,20 +67,21 @@ noise_map = af.util.numpy_array_from_json(
 analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
 """
-Resultsare written directly to the `database.sqlite` file omitted hard-disc output entirely, which
+Results are written directly to the `database.sqlite` file omitted hard-disc output entirely, which
 can be important for performing large model-fitting tasks on high performance computing facilities where there
 may be limits on the number of files allowed. The commented out code below shows how one would perform
 direct output to the `.sqlite` file. 
 """
-dynesty = af.DynestyStatic(
+search = af.DynestyStatic(
     name="grid_search",
     path_prefix=path.join("parallel"),
-    number_of_cores=2,
+    number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
+    force_x1_cpu=True # ensures parallelizing over grid search works.
 )
 
-grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=4, number_of_cores=5)
+grid_search = af.SearchGridSearch(search=search, number_of_steps=4, number_of_cores=5)
 
 grid_search_result = grid_search.fit(
     model=model, analysis=analysis, grid_priors=[model.centre]
@@ -90,12 +91,12 @@ model = af.Model(af.ex.Gaussian)
 
 model.centre = grid_search_result.model.centre
 
-dynesty = af.DynestyStatic(
+search = af.DynestyStatic(
     name="post_grid_search",
     path_prefix=path.join("parallel"),
-    number_of_cores=2,
+    number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
 )
 
-result = dynesty.fit(model=model, analysis=analysis)
+result = search.fit(model=model, analysis=analysis)
