@@ -77,7 +77,7 @@ We now create and run the `Drawer` object which acts as our non-linear search.
 
 We manually specify all of the Drawer settings, descriptions of which are provided at the following webpage:
 
-https://github.com/rhayes777/PyAutoFit/blob/master/autofit/non_linear/optimize/drawer/drawer.py
+https://github.com/rhayes777/PyAutoFit/blob/main/autofit/non_linear/optimize/drawer/drawer.py
 """
 search = af.Drawer(path_prefix="searches", name="Drawer2", total_draws=3)
 
