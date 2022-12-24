@@ -8,17 +8,17 @@ Multiple Datasets
 # %cd $workspace_path
 # print(f"Working Directory has been set to `{workspace_path}`")
 
-from os import path
-import autofit as af
-import autolens as al
-import autolens.plot as aplt
-
-import matplotlib.pyplot as plt
 import numpy as np
+import os
 from os import path
 
+cwd = os.getcwd()
+
+from autoconf import conf
+
+conf.instance.push(new_path=path.join(cwd, "config", "searches"))
+
 import autofit as af
-import autofit.plot as aplt
 
 """
 __Data__
@@ -37,7 +37,7 @@ noise_map_list = []
 for dataset_index in range(dataset_size):
 
     dataset_path = path.join(
-        "dataset", "example_1d", f"gaussian_x1_multi", f"dataset_{dataset_index}"
+        "dataset", "example_1d", f"gaussian_x1_identical_{dataset_index}"
     )
 
     data = af.util.numpy_array_from_json(file_path=path.join(dataset_path, "data.json"))
@@ -74,9 +74,9 @@ __Search__
 
 We now perform the search using this analysis class, which follows the same API as other tutorials on the workspace.
 """
-dynesty = af.DynestyStatic(path_prefix="multi", name="no_free_parameter")
+search = af.DynestyStatic(path_prefix="multi", name="no_free_parameter")
 
-result_list = dynesty.fit(model=model, analysis=analysis)
+result_list = search.fit(model=model, analysis=analysis)
 
 """
 __Result__
