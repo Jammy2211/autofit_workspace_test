@@ -1,13 +1,13 @@
 analysis:
-  n_cores: 1
+  n_cores: 1                        # The number of cores a parallelized sum of Analysis classes uses by default.
 hpc:
-  hpc_mode: false
-  iterations_per_update: 5000
+  hpc_mode: false                   # If True, use HPC mode, which disables GUI visualization, logging to screen and other settings which are not suited to running on a super computer.
+  iterations_per_update: 5000       # The number of iterations between every update (visualization, results output, etc) in HPC mode.
 model:
+  ignore_prior_limits: false        # If ``True`` the limits applied to priors will be ignored, where limits set upper / lower limits. This stops PriorLimitException's from being raised.
   ignore_prior_limits: false
 output:
   force_pickle_overwrite: false
-  identifier_version: 4
   info_whitespace_length: 80
   log_level: INFO
   log_to_file: false

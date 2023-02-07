@@ -17,10 +17,10 @@ You can run an integration test as follows:
 
 .. code-block:: bash
 
-    python slam/imaging/no_lens_light/source_parametric/mass_total/no_hyper.py
+    python slam/imaging/no_lens_light/source_lp/mass_total/no_hyper.py
 
 
 Workspace Version
 =================
 
-This version of the workspace are built and tested for using **PyAutoFit v2022.11.26.11**.
+This version of the workspace are built and tested for using **PyAutoFit v2023.1.15.1**.
