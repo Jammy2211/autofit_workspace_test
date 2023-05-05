@@ -91,7 +91,7 @@ grid_search_result = grid_search.fit(
 )
 
 """
-First, note how the results are not contained in the `output` folder after each search completes. Instead, they are
+The results are not contained in the `output` folder after each search completes. Instead, they are
 contained in the `database.sqlite` file, which we can load using the `Aggregator`.
 """
 import os
@@ -147,7 +147,7 @@ From the GridSearch, get an aggregator which contains only the maximum log likel
 agg_best_fit = agg_grid.best_fits()
 print("Size of Agg best fit = ", len(agg_best_fit), "\n")
 instance = agg_best_fit.values("instance")[0]
-print(instance.gaussian.sigma)
+print(instance.gaussian_0.sigma)
 samples = agg_best_fit.values("samples")[0]
 print(samples)
 

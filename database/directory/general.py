@@ -88,7 +88,7 @@ result = dynesty.fit(model=model, analysis=analysis)
 """
 __Database__
 
-First, note how the results are not contained in the `output` folder after each search completes. Instead, they are
+The results are not contained in the `output` folder after each search completes. Instead, they are
 contained in the `database.sqlite` file, which we can load using the `Aggregator`.
 """
 from autofit.database.aggregator import Aggregator

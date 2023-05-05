@@ -41,13 +41,18 @@ __Model__
 
 Next, we create our model, which again corresponds to a single `Gaussian` with manual priors.
 """
-model = af.Collection(gaussian=af.ex.Gaussian)
+gaussian_0 = af.Model(af.ex.Gaussian)
+gaussian_1 = af.Model(af.ex.Gaussian)
+gaussian_0.add_assertion(gaussian_0.centre < gaussian_1.centre)
 
-model.gaussian.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-model.gaussian.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
-model.gaussian.sigma = af.GaussianPrior(
-    mean=10.0, sigma=5.0, lower_limit=0.0, upper_limit=np.inf
-)
+# gaussian_0.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
+# gaussian_0.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
+# gaussian_0.sigma = af.GaussianPrior(
+#     mean=10.0, sigma=5.0, lower_limit=0.0, upper_limit=np.inf
+# )
+
+model = af.Collection(gaussian_0=gaussian_0, gaussian_1=gaussian_1)
+
 
 """
 ___Session__
@@ -70,6 +75,10 @@ noise_map = af.util.numpy_array_from_json(
 
 analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
+analysis_list = [analysis, analysis]
+
+analysis = sum(analysis_list)
+
 """
 Resultsare written directly to the `database.sqlite` file omitted hard-disc output entirely, which
 can be important for performing large model-fitting tasks on high performance computing facilities where there
@@ -89,7 +98,7 @@ result = dynesty.fit(model=model, analysis=analysis)
 """
 __Database__
 
-First, note how the results are not contained in the `output` folder after each search completes. Instead, they are
+The results are not contained in the `output` folder after each search completes. Instead, they are
 contained in the `database.sqlite` file, which we can load using the `Aggregator`.
 """
 from autofit.database.aggregator import Aggregator
@@ -125,16 +134,16 @@ name = agg.search.name
 agg_query = agg.query(name == "general")
 print("Total Samples Objects via `name` model query = ", len(agg_query), "\n")
 
-gaussian = agg.model.gaussian
-agg_query = agg.query(gaussian == af.ex.Gaussian)
+gaussian_0 = agg.model.gaussian
+agg_query = agg.query(gaussian_0 == af.ex.Gaussian)
 print("Total Samples Objects via `Gaussian` model query = ", len(agg_query), "\n")
 
-gaussian = agg.model.gaussian
-agg_query = agg.query(gaussian.sigma > 3.0)
+gaussian_0 = agg.model.gaussian
+agg_query = agg.query(gaussian_0.sigma > 3.0)
 print("Total Samples Objects In Query `gaussian.sigma < 3.0` = ", len(agg_query), "\n")
 
-gaussian = agg.model.gaussian
-agg_query = agg.query((gaussian == af.ex.Gaussian) & (gaussian.sigma < 3.0))
+gaussian_0 = agg.model.gaussian
+agg_query = agg.query((gaussian_0 == af.ex.Gaussian) & (gaussian_0.sigma < 3.0))
 print(
     "Total Samples Objects In Query `Gaussian & sigma < 3.0` = ", len(agg_query), "\n"
 )

@@ -90,7 +90,7 @@ for i in range(database_size):
 """
 __Database__
 
-First, note how the results are not contained in the `output` folder after each search completes. Instead, they are
+The results are not contained in the `output` folder after each search completes. Instead, they are
 contained in the `queries_profiling.sqlite` file, which we can load using the `Aggregator`.
 """
 if path.exists(path.join("output", "profiling.sqlite")):
