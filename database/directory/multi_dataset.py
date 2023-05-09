@@ -2,20 +2,6 @@
 Feature: Database
 =================
 
-The default behaviour of **PyAutoFit** is for model-fitting results to be output to hard-disc in folders, which are
-straight forward to navigate and manually check. For small model-fitting tasks this is sufficient, however many users
-have a need to perform many model fits to very large datasets, making manual inspection of results time consuming.
-
-PyAutoFit's database feature outputs all model-fitting results as a
-sqlite3 (https://docs.python.org/3/library/sqlite3.html) relational database, such that all results
-can be efficiently loaded into a Jupyter notebook or Python script for inspection, analysis and interpretation. This
-database supports advanced querying, so that specific model-fits (e.g., which fit a certain model or dataset) can be
-loaded.
-
-This example extends our example of fitting a 1D `Gaussian` profile and fits 3 independent datasets each containing a
-1D Gaussian. The results will be written to a `.sqlite` database, which we will load to demonstrate the database.
-
-A full description of PyAutoFit's database tools is provided in the database chapter of the `HowToFit` lectures.
 """
 # %matplotlib inline
 # from pyprojroot import here
@@ -70,13 +56,21 @@ noise_map = af.util.numpy_array_from_json(
 analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
 """
+We now create a list of 3 identical analysis objects and sum them, to activate PyAutoFit's multi-dataset
+fitting feature.
+"""
+analysis_list = [analysis, analysis, analysis]
+
+analysis = sum(analysis_list)
+
+"""
 Results are written directly to the `database.sqlite` file omitted hard-disc output entirely, which
 can be important for performing large model-fitting tasks on high performance computing facilities where there
 may be limits on the number of files allowed. The commented out code below shows how one would perform
 direct output to the `.sqlite` file. 
 """
 dynesty = af.DynestyStatic(
-    name="general",
+    name="multi_dataset",
     path_prefix=path.join("database", "directory"),
     number_of_cores=1,
     unique_tag=dataset_name,
@@ -93,7 +87,7 @@ contained in the `database.sqlite` file, which we can load using the `Aggregator
 """
 from autofit.database.aggregator import Aggregator
 
-database_file = "database_directory_general.sqlite"
+database_file = "database_directory_multi_dataset.sqlite"
 
 try:
     os.remove(path.join("output", database_file))
@@ -147,19 +141,3 @@ agg_query = agg.query(unique_tag == "gaussian_x1_1")
 
 print(agg_query.values("samples"))
 print("Total Samples Objects via unique tag Query = ", len(agg_query), "\n")
-
-"""
-__Data__
-
-Loading data via the aggregator, to ensure it is output by the model-fit in pickle files and loadable.
-"""
-def _data_from(fit: af.Fit):
-
-    data = fit.value(name="data")
-
-    return data
-
-data_gen = agg.map(func=_data_from)
-
-print("Data via Data Gen:")
-print([data for data in data_gen])
