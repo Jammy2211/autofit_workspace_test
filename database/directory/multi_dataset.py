@@ -2,6 +2,10 @@
 Feature: Database
 =================
 
+This test is the same as `general.py` but with an analysis objected that is a `CombinedAnalysis` of 3 identical
+`Analysis` objects.
+
+This tests whether database functionality works for multi-dataset fitting.
 """
 # %matplotlib inline
 # from pyprojroot import here
@@ -97,7 +101,7 @@ except FileNotFoundError:
 
 agg = Aggregator.from_database(path.join(database_file))
 agg.add_directory(
-    directory=path.join("output", "database", "directory", dataset_name, "general")
+    directory=path.join("output", "database", "directory", dataset_name, "multi_dataset")
 )
 
 """
@@ -119,7 +123,7 @@ agg_query = agg.query(path_prefix == path.join("database", "session", dataset_na
 print("Total Samples Objects via `path_prefix` model query = ", len(agg_query), "\n")
 
 name = agg.search.name
-agg_query = agg.query(name == "general")
+agg_query = agg.query(name == "multi_dataset")
 print("Total Samples Objects via `name` model query = ", len(agg_query), "\n")
 
 gaussian = agg.model.gaussian
@@ -141,3 +145,32 @@ agg_query = agg.query(unique_tag == "gaussian_x1_1")
 
 print(agg_query.values("samples"))
 print("Total Samples Objects via unique tag Query = ", len(agg_query), "\n")
+
+"""
+__Data__
+
+Loading data via the aggregator, to ensure it is output by the model-fit in pickle files and loadable.
+
+In the `general.py` example this provides a list of `data` objects for every model-fit performed (in this example a 
+list with a single entry for the single model-fit performed).
+
+For a `CombinedAnalysis` this should provide a list of `data` objects for every model-fit performed, but where
+every entry in the list is a list of `data` objects corresponding to each `data` used in each individual `Analysis`.
+
+There is an example in the comment below.
+"""
+def _data_from(fit: af.Fit):
+
+    data = fit.value(name="data")
+
+    return data
+
+data_gen = agg.map(func=_data_from)
+
+print("Data via Data Gen:")
+print([data for data in data_gen])
+
+# If 5 model-fits are performed using CombinedAnalysis, each with 3 datasets, this should return the second data '
+# of the 4th model fit.
+
+# print(data_gen[3][1])
