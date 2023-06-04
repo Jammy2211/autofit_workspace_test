@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 
 
 def simulate_dataset_1d_via_gaussian_from(gaussian, dataset_path):
-
     """
     Specify the number of pixels used to create the xvalues on which the 1D line of the profile is generated using and
     thus defining the number of data-points in our data.
@@ -72,7 +71,6 @@ def simulate_dataset_1d_via_gaussian_from(gaussian, dataset_path):
 
 
 def simulate_data_1d_with_kernel_via_gaussian_from(gaussian, dataset_path):
-
     """
     Specify the number of pixels used to create the xvalues on which the 1D line of the profile is generated using and
     thus defining the number of data-points in our data.
@@ -226,7 +224,6 @@ def simulate_dataset_1d_via_profile_1d_list_from(profile_1d_list, dataset_path):
     Output the model to a .json file so we can refer to its parameters in the future.
     """
     for i, profile in enumerate(profile_1d_list):
-
         model_file = path.join(dataset_path, f"model_{i}.json")
 
         with open(model_file, "w+") as f:
@@ -236,7 +233,6 @@ def simulate_dataset_1d_via_profile_1d_list_from(profile_1d_list, dataset_path):
 def simulate_data_1d_with_kernel_via_profile_1d_list_from(
     profile_1d_list, dataset_path
 ):
-
     """
     Specify the number of pixels used to create the xvalues on which the 1D line of the profile is generated using and
     thus defining the number of data-points in our data.
@@ -251,7 +247,6 @@ def simulate_data_1d_with_kernel_via_profile_1d_list_from(
     model_data_1d = np.zeros(shape=pixels)
 
     for profile in profile_1d_list:
-
         model_data_1d += profile.model_data_1d_via_xvalues_from(xvalues=xvalues)
 
     """

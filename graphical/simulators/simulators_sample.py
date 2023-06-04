@@ -25,7 +25,6 @@ of `total_datasets` 1D Gaussian datasets.
 total_datasets = 2
 
 for i in range(total_datasets):
-
     dataset_path = path.join(
         "dataset", "example_1d", f"gaussian_x1__sample", f"dataset_{i}"
     )

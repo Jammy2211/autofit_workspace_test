@@ -69,7 +69,6 @@ data_list = []
 noise_map_list = []
 
 for dataset_index in range(total_datasets):
-
     dataset_name = f"dataset_{dataset_index}"
 
     dataset_path = path.join(
@@ -96,7 +95,6 @@ For each dataset we now create a corresponding `Analysis` class, like in the pre
 analysis_list = []
 
 for data, noise_map in zip(data_list, noise_map_list):
-
     analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
     analysis_list.append(analysis)
@@ -114,7 +112,6 @@ centre_shared_prior = af.GaussianPrior(mean=50.0, sigma=30.0)
 model_list = []
 
 for model_index in range(len(data_list)):
-
     gaussian = af.Model(af.ex.Gaussian)
 
     gaussian.centre = centre_shared_prior  # This prior is used by all 3 Gaussians!
@@ -152,7 +149,6 @@ analysis_factor_list = []
 dataset_index = 0
 
 for model, analysis in zip(model_list, analysis_list):
-
     dataset_name = f"dataset_{dataset_index}"
     dataset_index += 1
 

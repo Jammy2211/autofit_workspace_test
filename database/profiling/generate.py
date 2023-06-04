@@ -14,7 +14,6 @@ import analysis as a
 
 
 def simulate_line_from_gaussian(instance):
-
     """
     Specify the number of pixels used to create the xvalues on which the 1D line of the profile is generated using and
     thus defining the number of data-points in our data.
@@ -60,7 +59,6 @@ model.gaussian.sigma = af.UniformPrior(lower_limit=1.0, upper_limit=10.0)
 database_size = 250
 
 for i in range(database_size):
-
     dataset_name = f"gaussian_{i}"
 
     """

@@ -41,7 +41,6 @@ data_list = []
 noise_map_list = []
 
 for dataset_index in range(total_datasets):
-
     dataset_name = f"dataset_{dataset_index}"
 
     dataset_path = path.join(
@@ -65,7 +64,6 @@ For each dataset we now create a corresponding `Analysis` class.
 analysis_list = []
 
 for data, noise_map in zip(data_list, noise_map_list):
-
     analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
     analysis_list.append(analysis)
@@ -84,7 +82,6 @@ We will see next how this `centre` is used to construct the hierachical model.
 model_list = []
 
 for model_index in range(len(data_list)):
-
     gaussian = af.Model(af.ex.Gaussian)
 
     gaussian.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
@@ -117,7 +114,6 @@ these different nodes then define the global model we are fitting.
 analysis_factor_list = []
 
 for model, analysis in zip(model_list, analysis_list):
-
     analysis_factor = af.AnalysisFactor(prior_model=model, analysis=analysis)
 
     analysis_factor_list.append(analysis_factor)
@@ -156,7 +152,6 @@ estimate.
 """
 
 for model in model_list:
-
     hierarchical_factor.add_drawn_variable(model.gaussian.centre)
 
 """

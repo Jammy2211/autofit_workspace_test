@@ -38,7 +38,6 @@ data_list = []
 noise_map_list = []
 
 for dataset_index in range(dataset_size):
-
     dataset_path = path.join(
         "dataset", "example_1d", f"gaussian_x1_identical_{dataset_index}"
     )
@@ -55,7 +54,6 @@ for dataset_index in range(dataset_size):
 Now lets plot all 3 datasets, including their error bars. 
 """
 for data in data_list:
-
     xvalues = range(data.shape[0])
 
     plt.errorbar(
@@ -100,7 +98,6 @@ examples, we set up an `Analysis` for each dataset one-by-one, using a for loop:
 analysis_list = []
 
 for data, noise_map in zip(data_list, noise_map_list):
-
     analysis = af.ex.Analysis(data=data, noise_map=noise_map)
     analysis_list.append(analysis)
 

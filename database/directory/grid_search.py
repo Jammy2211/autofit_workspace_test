@@ -186,5 +186,4 @@ Stored and prints input parent grid of grid search.
 """
 
 for fit in agg_best_fit:
-
     print(fit.parent)

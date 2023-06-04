@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 
 
 def simulate_dataset_1d_via_gaussian_from(gaussian, dataset_path):
-
     """
     Specify the number of pixels used to create the xvalues on which the 1D line of the profile is generated using and
     thus defining the number of data-points in our data.
@@ -69,4 +68,3 @@ def simulate_dataset_1d_via_gaussian_from(gaussian, dataset_path):
 
     with open(model_file, "w+") as f:
         json.dump(gaussian.dict(), f, indent=4)
-

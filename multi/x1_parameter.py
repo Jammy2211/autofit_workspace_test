@@ -35,7 +35,6 @@ data_list = []
 noise_map_list = []
 
 for dataset_index in range(dataset_size):
-
     dataset_path = path.join(
         "dataset", "example_1d", f"gaussian_x1_identical_{dataset_index}"
     )
@@ -151,4 +150,3 @@ This may require some dedicated thought...
 
 search = af.DynestyStatic(path_prefix="multi", name="model_linking_2")
 search.fit(model=model_link_3, analysis=analysis)
-

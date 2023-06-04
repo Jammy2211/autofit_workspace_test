@@ -31,7 +31,6 @@ Next, we create our model, which again corresponds to a single `Gaussian` with m
 instance_list = []
 
 for dataset_name, time in zip(dataset_name_list, time_list):
-
     """
     The code below loads the dataset and sets up the Analysis class.
     """

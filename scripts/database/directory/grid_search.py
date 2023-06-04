@@ -90,7 +90,7 @@ dynesty = af.DynestyStatic(
     number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
-    force_x1_cpu=True  # ensures parallelizing over grid search works.
+    force_x1_cpu=True,  # ensures parallelizing over grid search works.
 )
 
 parent = af.DynestyStatic(name="parent")
@@ -187,5 +187,4 @@ Stored and prints input parent grid of grid search.
 """
 
 for fit in agg_best_fit:
-
     print(fit.parent)

@@ -153,11 +153,13 @@ __Data__
 
 Loading data via the aggregator, to ensure it is output by the model-fit in pickle files and loadable.
 """
-def _data_from(fit: af.Fit):
 
+
+def _data_from(fit: af.Fit):
     data = fit.value(name="data")
 
     return data
+
 
 data_gen = agg.map(func=_data_from)
 

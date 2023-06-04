@@ -27,10 +27,9 @@ Load the dataset from hard-disc, set up its `Analysis` class and fit it with a n
 dataset_name = "gaussian_x1"
 
 for i in range(3):
-
     """
     __Model__
-    
+
     Next, we create our model, which again corresponds to a single `Gaussian` with manual priors.
     """
     model = af.Collection(gaussian=af.ex.Gaussian)
@@ -101,10 +100,10 @@ except FileNotFoundError:
     pass
 
 
-agg = Aggregator.from_database(path.join(database_file), completed_only=False,top_level_only=False)
-agg.add_directory(
-    directory=path.join("output", "database")
+agg = Aggregator.from_database(
+    path.join(database_file), completed_only=False, top_level_only=False
 )
+agg.add_directory(directory=path.join("output", "database"))
 
 """
 __Samples + Results__
@@ -161,9 +160,11 @@ every entry in the list is a list of `data` objects corresponding to each `data`
 
 There is an example in the comment below.
 """
-def _data_from(fit: af.Fit):
 
+
+def _data_from(fit: af.Fit):
     return fit.child_values(name="data")
+
 
 data_gen = agg.child_values(name="data")
 

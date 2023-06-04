@@ -211,9 +211,11 @@ for i, dataset_name in enumerate(dataset_name_list):
     ]
     analysis = sum(analysis_list)
 
-    search.fit(analysis=analysis, model=model,
-             #  info=info
-               )
+    search.fit(
+        analysis=analysis,
+        model=model,
+        #  info=info
+    )
 
 """
 If you inspect the `autocti_workspace/output/database` folder during the model-fit, you'll see that the results

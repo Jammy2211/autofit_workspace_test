@@ -35,7 +35,6 @@ data_list = []
 noise_map_list = []
 
 for dataset_index in range(dataset_size):
-
     dataset_path = path.join(
         "dataset", "example_1d", f"gaussian_x1_identical_{dataset_index}"
     )

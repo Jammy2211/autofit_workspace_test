@@ -78,7 +78,7 @@ search = af.DynestyStatic(
     number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
-    force_x1_cpu=True # ensures parallelizing over grid search works.
+    force_x1_cpu=True,  # ensures parallelizing over grid search works.
 )
 
 grid_search = af.SearchGridSearch(search=search, number_of_steps=4, number_of_cores=5)
