@@ -26,62 +26,64 @@ Load the dataset from hard-disc, set up its `Analysis` class and fit it with a n
 """
 dataset_name = "gaussian_x1"
 
-"""
-__Model__
+for i in range(3):
 
-Next, we create our model, which again corresponds to a single `Gaussian` with manual priors.
-"""
-model = af.Collection(gaussian=af.ex.Gaussian)
+    """
+    __Model__
+    
+    Next, we create our model, which again corresponds to a single `Gaussian` with manual priors.
+    """
+    model = af.Collection(gaussian=af.ex.Gaussian)
 
-model.gaussian.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-model.gaussian.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
-model.gaussian.sigma = af.GaussianPrior(
-    mean=10.0, sigma=5.0, lower_limit=0.0, upper_limit=np.inf
-)
+    model.gaussian.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
+    model.gaussian.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
+    model.gaussian.sigma = af.GaussianPrior(
+        mean=10.0, sigma=5.0, lower_limit=0.0, upper_limit=np.inf
+    )
 
-"""
-___Session__
+    """
+    ___Session__
+    
+    To output results directly to the database, we start a session, which includes the name of the database `.sqlite` file
+    where results are stored.
+    """
+    session = None
 
-To output results directly to the database, we start a session, which includes the name of the database `.sqlite` file
-where results are stored.
-"""
-session = None
+    """
+    The code below loads the dataset and sets up the Analysis class.
+    """
+    dataset_path = path.join("dataset", "example_1d", dataset_name)
 
-"""
-The code below loads the dataset and sets up the Analysis class.
-"""
-dataset_path = path.join("dataset", "example_1d", dataset_name)
+    data = af.util.numpy_array_from_json(file_path=path.join(dataset_path, "data.json"))
+    noise_map = af.util.numpy_array_from_json(
+        file_path=path.join(dataset_path, "noise_map.json")
+    )
 
-data = af.util.numpy_array_from_json(file_path=path.join(dataset_path, "data.json"))
-noise_map = af.util.numpy_array_from_json(
-    file_path=path.join(dataset_path, "noise_map.json")
-)
+    analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
-analysis = af.ex.Analysis(data=data, noise_map=noise_map)
+    """
+    We now create a list of 3 identical analysis objects and sum them, to activate PyAutoFit's multi-dataset
+    fitting feature.
+    """
+    analysis_list = [analysis, analysis, analysis]
 
-"""
-We now create a list of 3 identical analysis objects and sum them, to activate PyAutoFit's multi-dataset
-fitting feature.
-"""
-analysis_list = [analysis, analysis, analysis]
+    analysis = sum(analysis_list)
 
-analysis = sum(analysis_list)
+    """
+    Results are written directly to the `database.sqlite` file omitted hard-disc output entirely, which
+    can be important for performing large model-fitting tasks on high performance computing facilities where there
+    may be limits on the number of files allowed. The commented out code below shows how one would perform
+    direct output to the `.sqlite` file. 
+    """
+    dynesty = af.DynestyStatic(
+        path_prefix=path.join("database"),
+        name="multi_dataset",
+        number_of_cores=1,
+        unique_tag=f"{dataset_name}_{i}",
+        session=session,
+    )
 
-"""
-Results are written directly to the `database.sqlite` file omitted hard-disc output entirely, which
-can be important for performing large model-fitting tasks on high performance computing facilities where there
-may be limits on the number of files allowed. The commented out code below shows how one would perform
-direct output to the `.sqlite` file. 
-"""
-dynesty = af.DynestyStatic(
-    name="multi_dataset",
-    path_prefix=path.join("database", "directory"),
-    number_of_cores=1,
-    unique_tag=dataset_name,
-    session=session,
-)
-
-result = dynesty.fit(model=model, analysis=analysis)
+    result = dynesty.fit(model=model, analysis=analysis)
 
 """
 __Database__
@@ -91,7 +93,7 @@ contained in the `database.sqlite` file, which we can load using the `Aggregator
 """
 from autofit.database.aggregator import Aggregator
 
-database_file = "database_directory_multi_dataset.sqlite"
+database_file = "database.sqlite"
 
 try:
     os.remove(path.join("output", database_file))
@@ -99,9 +101,9 @@ except FileNotFoundError:
     pass
 
 
-agg = Aggregator.from_database(path.join(database_file))
+agg = Aggregator.from_database(path.join(database_file), completed_only=False,top_level_only=False)
 agg.add_directory(
-    directory=path.join("output", "database", "directory", dataset_name, "multi_dataset")
+    directory=path.join("output", "database")
 )
 
 """
@@ -161,16 +163,16 @@ There is an example in the comment below.
 """
 def _data_from(fit: af.Fit):
 
-    data = fit.value(name="data")
+    return fit.child_values(name="data")
 
-    return data
+data_gen = agg.child_values(name="data")
 
-data_gen = agg.map(func=_data_from)
+data = [data for data in data_gen]
 
 print("Data via Data Gen:")
-print([data for data in data_gen])
+print(data)
 
 # If 5 model-fits are performed using CombinedAnalysis, each with 3 datasets, this should return the second data '
 # of the 4th model fit.
 
-# print(data_gen[3][1])
+print(data[0][2])

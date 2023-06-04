@@ -104,7 +104,7 @@ model is used to fit the data.
 
 We now simply pair each model-component to each `Analysis` class, so that **PyAutoFit** knows that: 
 
-- `gaussian_0` fits `data_0` via `analysis_0`.
+- `gaussian` fits `data_0` via `analysis_0`.
 - `gaussian_1` fits `data_1` via `analysis_1`.
 - `gaussian_2` fits `data_2` via `analysis_2`.
 
@@ -196,11 +196,11 @@ print(f"Value of centre via joint PDF = {50.0}")
 print(f"Error on centre via joint PDF (2 sigma) = {5.0}")
 
 instance = result.samples.median_pdf()
-print(f"Value of centre via graphical model = {instance[0].gaussian_0.centre}")
+print(f"Value of centre via graphical model = {instance[0].gaussian.centre}")
 
 error_instance = result.samples.errors_at_sigma(sigma=2.0)
 print(
-    f"Error on centre via graphical model (2 sigma) = {error_instance[0].gaussian_0.centre}"
+    f"Error on centre via graphical model (2 sigma) = {error_instance[0].gaussian.centre}"
 )
 
 """

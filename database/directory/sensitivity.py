@@ -253,7 +253,7 @@ def simulate_function(instance):
     data = model_line + noise
     noise_map = (1.0 / signal_to_noise_ratio) * np.ones(pixels)
 
-    return Dataset(data=data, noise_map=noise_map)
+    return Imaging(data=data, noise_map=noise_map)
 
 
 """

@@ -168,7 +168,7 @@ From the GridSearch, get an aggregator which contains only the maximum log likel
 agg_best_fit = agg_grid_searches.best_fits()
 print("Size of Agg best fit = ", len(agg_best_fit), "\n")
 instance = agg_best_fit.values("instance")[0]
-print(instance.gaussian_0.sigma)
+print(instance.gaussian.sigma)
 samples = agg_best_fit.values("samples")[0]
 print(samples)
 
