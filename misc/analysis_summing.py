@@ -122,9 +122,9 @@ __Search__
 
 We now perform the search using this analysis class, which follows the same API as other tutorials on the workspace.
 """
-dynesty = af.DynestyStatic(path_prefix=path.join("misc"), name="analysis_summing_0")
+search = af.DynestyStatic(path_prefix=path.join("misc"), name="analysis_summing_0")
 
-result = dynesty.fit(model=model, analysis=analysis)
+result = search.fit(model=model, analysis=analysis)
 
 """
 __Different Analysis Objects__

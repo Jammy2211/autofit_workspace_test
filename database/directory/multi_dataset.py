@@ -74,7 +74,7 @@ for i in range(3):
     may be limits on the number of files allowed. The commented out code below shows how one would perform
     direct output to the `.sqlite` file. 
     """
-    dynesty = af.DynestyStatic(
+    search = af.DynestyStatic(
         path_prefix=path.join("database"),
         name="multi_dataset",
         number_of_cores=1,
@@ -82,7 +82,7 @@ for i in range(3):
         session=session,
     )
 
-    result = dynesty.fit(model=model, analysis=analysis)
+    result = search.fit(model=model, analysis=analysis)
 
 """
 __Database__

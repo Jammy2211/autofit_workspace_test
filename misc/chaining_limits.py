@@ -55,19 +55,19 @@ We manually specify all of the Dynesty settings, descriptions of which are provi
  https://dynesty.readthedocs.io/en/latest/api.html
  https://dynesty.readthedocs.io/en/latest/api.html#module-dynesty.nestedsamplers
 """
-dynesty = af.DynestyStatic(
+search = af.DynestyStatic(
     path_prefix="chaining_limits",
     name="search[1]",
 )
 
-result = dynesty.fit(model=model, analysis=analysis)
+result = search.fit(model=model, analysis=analysis)
 
 
 model = result.model
 
-dynesty = af.DynestyStatic(
+search = af.DynestyStatic(
     path_prefix="chaining_limits",
     name="search[2]",
 )
 
-result = dynesty.fit(model=model, analysis=analysis)
+result = search.fit(model=model, analysis=analysis)

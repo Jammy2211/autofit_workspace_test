@@ -55,8 +55,7 @@ ___Session__
 To output results directly to the database, we start a session, which includes the name of the database `.sqlite` file
 where results are stored.
 """
-database_file = "database_session_general.sqlite"
-session = af.db.open_database(database_file)
+session = None
 
 """
 The code below loads the dataset and sets up the Analysis class.
@@ -71,20 +70,22 @@ noise_map = af.util.numpy_array_from_json(
 analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
 """
-Resultsare written directly to the `database.sqlite` file omitted hard-disc output entirely, which
+Results are written directly to the `database.sqlite` file omitted hard-disc output entirely, which
 can be important for performing large model-fitting tasks on high performance computing facilities where there
 may be limits on the number of files allowed. The commented out code below shows how one would perform
 direct output to the `.sqlite` file. 
 """
+
 search = af.DynestyStatic(
-    name="general",
-    path_prefix=path.join("database", "session"),
+    name="pickle_remove",
+    path_prefix=path.join("database", "directory"),
+    nlive=75,
     number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
 )
 
-result = search.fit(model=model, analysis=analysis)
+result = search.fit(model=model, analysis=analysis, info={"example_key": 42})
 
 """
 __Database__
@@ -94,53 +95,74 @@ contained in the `database.sqlite` file, which we can load using the `Aggregator
 """
 from autofit.database.aggregator import Aggregator
 
+database_file = "database_directory_pickle_remove.sqlite"
+
 try:
-    os.remove(path.join(database_file))
+    os.remove(path.join("output", database_file))
 except FileNotFoundError:
     pass
 
 
 agg = Aggregator.from_database(path.join(database_file))
-agg.add_directory(directory=path.join("output", "database", "directory"))
-
-"""
-__Samples + Results__
-
-Make sure database + agg can be used.
-"""
-for samples in agg.values("samples"):
-    print(samples.parameter_lists[0])
-
-mp_instances = [samps.median_pdf() for samps in agg.values("samples")]
-print(mp_instances)
-
-"""
-__Queries__
-"""
-path_prefix = agg.search.path_prefix
-agg_query = agg.query(path_prefix == path.join("database", "session", dataset_name))
-print("Total Samples Objects via `path_prefix` model query = ", len(agg_query), "\n")
-
-name = agg.search.name
-agg_query = agg.query(name == "general")
-print("Total Samples Objects via `name` model query = ", len(agg_query), "\n")
-
-gaussian = agg.model.gaussian
-agg_query = agg.query(gaussian == af.ex.Gaussian)
-print("Total Samples Objects via `Gaussian` model query = ", len(agg_query), "\n")
-
-gaussian = agg.model.gaussian
-agg_query = agg.query(gaussian.sigma > 3.0)
-print("Total Samples Objects In Query `gaussian.sigma < 3.0` = ", len(agg_query), "\n")
-
-gaussian = agg.model.gaussian
-agg_query = agg.query((gaussian == af.ex.Gaussian) & (gaussian.sigma < 3.0))
-print(
-    "Total Samples Objects In Query `Gaussian & sigma < 3.0` = ", len(agg_query), "\n"
+agg.add_directory(
+    directory=path.join("output", "database", "directory", dataset_name, "pickle_remove")
 )
 
-unique_tag = agg.search.unique_tag
-agg_query = agg.query(unique_tag == "gaussian_x1_1")
+"""
+__Search__
 
-print(agg_query.values("samples"))
-print("Total Samples Objects via unique tag Query = ", len(agg_query), "\n")
+Load the search via the database and make assert statements to ensure that using `search.json` works as expected.
+"""
+search = agg.values(name="search")[0]
+
+print(search.paths.name)
+
+assert search.paths.name == "pickle_remove"
+assert search.nlive == 75
+
+"""
+__Model__
+
+Load the `model` via the database and put some assert statements to ensure that using `model.json` works as expected.
+"""
+model = agg.values(name="model")[0]
+
+assert model.gaussian.centre.lower_limit == 0.0
+assert model.gaussian.centre.upper_limit == 100.0
+assert model.gaussian.normalization.lower_limit == 1e-2
+
+
+"""
+__Info__
+
+Load the `info` via the database and put some assert statements to ensure that using `info.json` works as expected.
+"""
+info = agg.values(name="info")[0]
+
+assert info["example_key"] == 42
+
+"""
+__Samples__
+
+Load the `Samples` via the database and put some assert statements to ensure that using `samples.csv` works as
+expected.
+"""
+samples = agg.values(name="samples")[0]
+
+max_lh_instance = samples.max_log_likelihood()
+
+assert max(samples.log_likelihood_list) > -46.0
+assert 47 < max_lh_instance.gaussian.centre < 53
+assert samples.log_evidence > -60.0
+
+"""
+__Results Internal__
+
+Using the `Samples` loaded above, verify that the results internal have been loaded via a .pickle file and thus
+dynesty visualization works as expected.
+"""
+import autofit.plot as aplt
+
+search_plotter = aplt.DynestyPlotter(samples=samples)
+
+search_plotter.cornerplot()

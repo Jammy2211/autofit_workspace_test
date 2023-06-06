@@ -76,7 +76,7 @@ can be important for performing large model-fitting tasks on high performance co
 may be limits on the number of files allowed. The commented out code below shows how one would perform
 direct output to the `.sqlite` file. 
 """
-dynesty = af.DynestyStatic(
+search = af.DynestyStatic(
     name="grid_search",
     path_prefix=path.join("database", "session"),
     number_of_cores=4,

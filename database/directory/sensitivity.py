@@ -99,7 +99,7 @@ model = af.Collection(gaussian_main=af.ex.Gaussian)
 model.gaussian_main.centre = 50.0
 model.gaussian_main.sigma = 10.0
 
-dynesty = af.DynestyStatic(
+search = af.DynestyStatic(
     path_prefix=path.join("database", "directory", "sensitivity"),
     name="single_gaussian",
     nlive=25,
@@ -108,7 +108,7 @@ dynesty = af.DynestyStatic(
     iterations_per_update=50000,
 )
 
-result_single = dynesty.fit(model=model, analysis=analysis)
+result_single = search.fit(model=model, analysis=analysis)
 
 model = af.Collection(gaussian_main=af.ex.Gaussian, gaussian_feature=af.ex.Gaussian)
 model.gaussian_main.centre = 50.0
@@ -116,7 +116,7 @@ model.gaussian_main.sigma = 10.0
 model.gaussian_feature.centre = 70.0
 model.gaussian_feature.sigma = 0.5
 
-dynesty = af.DynestyStatic(
+search = af.DynestyStatic(
     path_prefix=path.join("database", "directory", "sensitivity"),
     name=("two_gaussians"),
     nlive=25,
@@ -125,7 +125,7 @@ dynesty = af.DynestyStatic(
     iterations_per_update=50000,
 )
 
-result_multiple = dynesty.fit(model=model, analysis=analysis)
+result_multiple = search.fit(model=model, analysis=analysis)
 
 """
 We can now print the `log_evidence` of each fit and confirm the model with two `Gaussians` was preferred to the model

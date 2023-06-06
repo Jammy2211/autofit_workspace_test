@@ -76,13 +76,13 @@ for i in range(database_size):
     """
     __Search__
     """
-    dynesty = af.DynestyStatic(
+    search = af.DynestyStatic(
         path_prefix=path.join("database", "profiling"),
         number_of_cores=4,
         unique_tag=dataset_name,
     )
 
-    dynesty.fit(model=model, analysis=analysis)
+    search.fit(model=model, analysis=analysis)
 
 
 """
