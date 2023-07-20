@@ -59,7 +59,7 @@ for dataset_name, time in zip(dataset_name_list, time_list):
     )
 
     print(
-        f"Dynesty has begun running. This Jupyter notebook cell with progress once Dynesty has completed, "
+        f"The non-linear search has begun running. This Jupyter notebook cell with progress once search has completed, "
         f"this could take a "
         f"few minutes!"
     )

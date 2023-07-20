@@ -45,7 +45,7 @@ dataset_name = "gaussian_x1_with_feature"
 """
 __Data__
 
-First, lets load data of a 1D Gaussian, by loading it from a .json file in the directory 
+Load data of a 1D Gaussian from a .json file in the directory 
 `autofit_workspace/dataset/gaussian_x1_with_feature`.
 
 This 1D data includes a small feature to the right of the central `Gaussian`. This feature is a second `Gaussian` 
@@ -58,7 +58,7 @@ noise_map = af.util.numpy_array_from_json(
 )
 
 """
-Now lets plot the data, including its error bars. 
+Lets plot the data. 
 
 The feature on pixel 70 is clearly visible.
 """
@@ -238,7 +238,7 @@ def simulate_function(instance):
     print(instance.perturbation.normalization)
     print(instance.perturbation.sigma)
 
-    model_line = instance.gaussian_main.model_data_1d_via_xvalues_from(
+    model_line = instance.gaussian_0.model_data_1d_via_xvalues_from(
         xvalues=xvalues
     ) + instance.perturbation.model_data_1d_via_xvalues_from(xvalues=xvalues)
 

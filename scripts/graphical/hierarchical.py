@@ -99,7 +99,7 @@ Above, we composed a model consisting of three `Gaussian`'s with a shared `centr
 which we intend to fit with each of these `Gaussians`, setting up each in an `Analysis` class that defines how the 
 model is used to fit the data.
 
-We now simply pair each model-component to each `Analysis` class, so that **PyAutoFit** knows that: 
+We now simply pair each model-component to each `Analysis` class, so that:
 
 - `gaussian` fits `data_0` via `analysis_0`.
 - `gaussian_1` fits `data_1` via `analysis_1`.
