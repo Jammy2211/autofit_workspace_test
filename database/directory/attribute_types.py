@@ -94,12 +94,15 @@ class Analysis(af.ex.Analysis):
 
         ### TODO : Rich Add ###
 
+        name = "csv_example"
+        csv_arr = 2.0 * np.ones(shape=(2,2))
+
         ### FITS ###
 
         from astropy.io import fits
 
         new_hdr = fits.Header()
-        hdu = fits.PrimaryHDU(np.ones(shape=(2,2)), new_hdr)
+        hdu = fits.PrimaryHDU(3.0 * np.ones(shape=(2,2)), new_hdr)
         hdu.writeto(paths._files_path / "fits_example.fits")
 
 analysis = Analysis(data=data, noise_map=noise_map)
@@ -137,3 +140,8 @@ agg.add_directory(
 )
 
 print(agg.values("json_example"))
+
+assert agg.values("json_dictable_example") is ExampleJSonDict
+assert (agg.values("pickle_example") == data).all()
+assert (agg.values("csv_example") == 2.0 * np.ones(shape=(2,2))).all()
+assert (agg.values("fits_example") == 3.0 * np.ones(shape=(2,2))).all()
