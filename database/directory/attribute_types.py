@@ -103,7 +103,7 @@ class Analysis(af.ex.Analysis):
 
         new_hdr = fits.Header()
         hdu = fits.PrimaryHDU(3.0 * np.ones(shape=(2,2)), new_hdr)
-        hdu.writeto(paths._files_path / "fits_example.fits")
+        hdu.writeto(paths._files_path / "fits_example.fits", overwrite=True)
 
 analysis = Analysis(data=data, noise_map=noise_map)
 
