@@ -96,13 +96,16 @@ class Analysis(af.ex.Analysis):
         name = "csv_example"
         csv_arr = 2.0 * np.ones(shape=(2, 2))
 
+        paths.save_array(name=name, array=csv_arr)
+
         ### FITS ###
 
         from astropy.io import fits
 
         new_hdr = fits.Header()
         hdu = fits.PrimaryHDU(3.0 * np.ones(shape=(2, 2)), new_hdr)
-        hdu.writeto(paths._files_path / "fits_example.fits", overwrite=True)
+
+        paths.save_fits(name="fits_example", hdu=hdu)
 
 
 analysis = Analysis(data=data, noise_map=noise_map)
@@ -142,9 +145,14 @@ if __name__ == "__main__":
         )
     )
 
-    print(agg.values("json_example"))
+    def first(name):
+        return agg.values(name)[0]
 
-    assert agg.values("json_dictable_example") is ExampleJSonDict
-    assert (agg.values("pickle_example") == data).all()
-    assert (agg.values("csv_example") == 2.0 * np.ones(shape=(2, 2))).all()
-    assert (agg.values("fits_example") == 3.0 * np.ones(shape=(2, 2))).all()
+    print(first("json_example"))
+
+    assert isinstance(
+        ExampleJSonDict.from_dict(first("json_dictable_example")), ExampleJSonDict
+    )
+    assert (first("pickle_example") == data).all()
+    assert (first("csv_example") == 2.0 * np.ones(shape=(2, 2))).all()
+    assert (first("fits_example").data == 3.0 * np.ones(shape=(2, 2))).all()
