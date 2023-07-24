@@ -8,6 +8,8 @@ inspection.
 This test script uses an `Analysis` class which outputs all supported data format types to the `files` folder,
 and checks they can be loaded via the database.
 """
+from typing import cast
+
 # %matplotlib inline
 # from pyprojroot import here
 # workspace_path = str(here())
@@ -66,25 +68,22 @@ The Analysis below manually write out data for all filetypes supported for loadi
 """
 from autoconf.dictable import Dictable
 
+
 class ExampleJSonDict(Dictable):
-
-    def __init__(self, value : float = 1.0):
-
+    def __init__(self, value: float = 1.0):
         self.value = value
 
+
 class Analysis(af.ex.Analysis):
-
     def save_attributes(self, paths: af.DirectoryPaths):
-
         ### JSON (Not Dictable) ###
 
-        with open(paths._files_path / "json_example.json", "w+") as f:
-            json.dump(self.data.tolist(), f, indent=4)
+        paths.save_json("json_example", cast(list, self.data.tolist()))
 
         ### JSON (Dictable) ###
 
         json_dictable = ExampleJSonDict(value=1.0)
-        json_dictable.output_to_json(file_path=paths._files_path / "json_dictable_example.json")
+        paths.save_json("json_dictable_example", json_dictable.dict())
 
         ### PICKLE ###
 
@@ -95,15 +94,16 @@ class Analysis(af.ex.Analysis):
         ### TODO : Rich Add ###
 
         name = "csv_example"
-        csv_arr = 2.0 * np.ones(shape=(2,2))
+        csv_arr = 2.0 * np.ones(shape=(2, 2))
 
         ### FITS ###
 
         from astropy.io import fits
 
         new_hdr = fits.Header()
-        hdu = fits.PrimaryHDU(3.0 * np.ones(shape=(2,2)), new_hdr)
+        hdu = fits.PrimaryHDU(3.0 * np.ones(shape=(2, 2)), new_hdr)
         hdu.writeto(paths._files_path / "fits_example.fits", overwrite=True)
+
 
 analysis = Analysis(data=data, noise_map=noise_map)
 
@@ -118,30 +118,33 @@ search = af.DynestyStatic(
     session=session,
 )
 
-result = search.fit(model=model, analysis=analysis)
 
-"""
-__Database (build va scrape)__
+if __name__ == "__main__":
+    result = search.fit(model=model, analysis=analysis)
 
-"""
-from autofit.database.aggregator import Aggregator
+    """
+    __Database (build va scrape)__
+    
+    """
+    from autofit.database.aggregator import Aggregator
 
-database_file = "database_directory_general.sqlite"
+    database_file = "database_directory_general.sqlite"
 
-try:
-    os.remove(path.join("output", database_file))
-except FileNotFoundError:
-    pass
+    try:
+        os.remove(path.join("output", database_file))
+    except FileNotFoundError:
+        pass
 
+    agg = Aggregator.from_database(path.join(database_file))
+    agg.add_directory(
+        directory=path.join(
+            "output", "database", "directory", dataset_name, "attribute_types"
+        )
+    )
 
-agg = Aggregator.from_database(path.join(database_file))
-agg.add_directory(
-    directory=path.join("output", "database", "directory", dataset_name, "attribute_types")
-)
+    print(agg.values("json_example"))
 
-print(agg.values("json_example"))
-
-assert agg.values("json_dictable_example") is ExampleJSonDict
-assert (agg.values("pickle_example") == data).all()
-assert (agg.values("csv_example") == 2.0 * np.ones(shape=(2,2))).all()
-assert (agg.values("fits_example") == 3.0 * np.ones(shape=(2,2))).all()
+    assert agg.values("json_dictable_example") is ExampleJSonDict
+    assert (agg.values("pickle_example") == data).all()
+    assert (agg.values("csv_example") == 2.0 * np.ones(shape=(2, 2))).all()
+    assert (agg.values("fits_example") == 3.0 * np.ones(shape=(2, 2))).all()
