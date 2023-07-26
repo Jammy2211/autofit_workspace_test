@@ -66,7 +66,7 @@ __Model__
 
 Next, we create our model, which in this case corresponds to a single Gaussian.
 """
-model = af.Model(af.ex.Gaussian)
+model = af.Collection(gaussian=af.Model(af.ex.Gaussian))
 
 """
 __Search__
@@ -80,6 +80,12 @@ result_list = search.fit(model=model, analysis=analysis)
 """
 __Result__
 """
-model_data = result_list[0].max_log_likelihood_instance.model_data_1d_via_xvalues_from(
-    xvalues=np.arange(data.shape[0])
-)
+# model_data = result_list[0].max_log_likelihood_instance.model_data_1d_via_xvalues_from(
+#     xvalues=np.arange(data.shape[0])
+# )
+
+samples = result_list[0].samples
+
+for sample in samples.sample_list:
+
+    instance = sample.instance_for_model(model=samples.model)

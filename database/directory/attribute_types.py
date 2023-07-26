@@ -49,7 +49,7 @@ ___Session__
 To output results directly to the database, we start a session, which includes the name of the database `.sqlite` file
 where results are stored.
 """
-session = None
+session = af.db.open_database("database.sqlite")
 
 """
 The code below loads the dataset and sets up the Analysis class.
@@ -147,8 +147,6 @@ if __name__ == "__main__":
 
     def first(name):
         return agg.values(name)[0]
-
-    print(first("json_example"))
 
     assert isinstance(
         ExampleJSonDict.from_dict(first("json_dictable_example")), ExampleJSonDict

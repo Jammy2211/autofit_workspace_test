@@ -272,7 +272,7 @@ the `Samples` class acts as an interface to the results of the non-linear search
 samples_gen = agg.values("samples")
 
 """
-When we print this the length of this generator converted to a list of outputs we see 3 different `SamplesDynesty`
+When we print this the length of this generator converted to a list of outputs we see 3 different `SamplesNest`
 instances. 
 
 These correspond to each fit of each search to each of our 3 images.
