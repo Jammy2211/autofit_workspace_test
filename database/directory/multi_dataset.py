@@ -163,10 +163,10 @@ There is an example in the comment below.
 
 
 def _data_from(fit: af.Fit):
-    return fit.child_values(name="data")
+    return fit.child_values(name="dataset.data")
 
 
-data_gen = agg.child_values(name="data")
+data_gen = agg.child_values(name="dataset.data")
 
 data = [data for data in data_gen]
 

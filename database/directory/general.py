@@ -112,7 +112,18 @@ __Samples + Results__
 Make sure database + agg can be used.
 """
 for samples in agg.values("samples"):
+
+    print()
+    print("THESE DO NOT WORK")
+
+    print(samples)
+
     print(samples.parameter_lists[0])
+    print(samples.parameter_lists[0])
+    print(samples.parameter_lists[0])
+    print(samples.parameter_lists[0])
+
+STOP
 
 mp_instances = [samps.median_pdf() for samps in agg.values("samples")]
 print(mp_instances)
@@ -156,7 +167,7 @@ Loading data via the aggregator, to ensure it is output by the model-fit in pick
 
 
 def _data_from(fit: af.Fit):
-    data = fit.value(name="data")
+    data = fit.value(name="dataset.data")
 
     return data
 

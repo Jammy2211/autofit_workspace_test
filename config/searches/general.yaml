@@ -8,7 +8,6 @@ inversion:
   reconstruction_vmax_factor: 0.5   # Plots of an Inversion's reconstruction use the reconstructed data's bright value multiplied by this factor.  
 model:
   ignore_prior_limits: false        # If ``True`` the limits applied to priors will be ignored, where limits set upper / lower limits. This stops PriorLimitException's from being raised.
-  ignore_prior_limits: false
 output:
   force_pickle_overwrite: false
   info_whitespace_length: 80
