@@ -91,9 +91,20 @@ __Database__
 The results are not contained in the `output` folder after each search completes. Instead, they are
 contained in the `database.sqlite` file, which we can load using the `Aggregator`.
 """
-from autofit.aggregator.aggregator import Aggregator
+from autofit.database.aggregator import Aggregator
 
-agg = Aggregator(directory=path.join("output", "database", "directory", dataset_name, "general"))
+database_file = "database_scrape_general.sqlite"
+
+try:
+    os.remove(path.join("output", database_file))
+except FileNotFoundError:
+    pass
+
+
+agg = Aggregator.from_database(path.join(database_file))
+agg.add_directory(
+    directory=path.join("output", "database", "scrape", dataset_name, "general")
+)
 
 """
 __Samples + Results__

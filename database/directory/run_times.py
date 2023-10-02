@@ -76,14 +76,14 @@ may be limits on the number of files allowed. The commented out code below shows
 direct output to the `.sqlite` file. 
 """
 search = af.DynestyStatic(
-    name="general",
-    path_prefix=path.join("database", "scrape"),
+    name="run_times",
+    path_prefix=path.join("database", "directory"),
     number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
 )
 
-result = search.fit(model=model, analysis=analysis, info={"hi" : "there"})
+result = search.fit(model=model, analysis=analysis)
 
 """
 __Database__
@@ -91,75 +91,41 @@ __Database__
 The results are not contained in the `output` folder after each search completes. Instead, they are
 contained in the `database.sqlite` file, which we can load using the `Aggregator`.
 """
-from autofit.aggregator.aggregator import Aggregator
+from autofit.database.aggregator import Aggregator
 
-agg = Aggregator(directory=path.join("output", "database", "directory", dataset_name, "general"))
+database_file = "database_directory_general.sqlite"
+
+try:
+    os.remove(path.join("output", database_file))
+except FileNotFoundError:
+    pass
+
+import time
+
+start_time = time.time()
+
+agg = Aggregator.from_database(path.join(database_file))
+
+print(f"from database time = {time.time() - start_time}")
+
+start_time = time.time()
+
+agg.add_directory(
+    directory=path.join("output", "database", "directory", dataset_name, "general")
+)
+
+print(f"add directory time = {time.time() - start_time}")
 
 """
 __Samples + Results__
 
 Make sure database + agg can be used.
 """
+
+start_time = time.time()
+
 for samples in agg.values("samples"):
-    print(samples.parameter_lists[0])
 
-mp_instances = [samps.median_pdf() for samps in agg.values("samples")]
-print(mp_instances)
+    samples
 
-"""
-__Queries__
-"""
-path_prefix = agg.search.path_prefix
-agg_query = agg.query(path_prefix == path.join("database", "session", dataset_name))
-print("Total Samples Objects via `path_prefix` model query = ", len(agg_query), "\n")
-
-name = agg.search.name
-agg_query = agg.query(name == "general")
-print("Total Samples Objects via `name` model query = ", len(agg_query), "\n")
-
-gaussian = agg.model.gaussian
-agg_query = agg.query(gaussian == af.ex.Gaussian)
-print("Total Samples Objects via `Gaussian` model query = ", len(agg_query), "\n")
-
-gaussian = agg.model.gaussian
-agg_query = agg.query(gaussian.sigma > 3.0)
-print("Total Samples Objects In Query `gaussian.sigma < 3.0` = ", len(agg_query), "\n")
-
-gaussian = agg.model.gaussian
-agg_query = agg.query((gaussian == af.ex.Gaussian) & (gaussian.sigma < 3.0))
-print(
-    "Total Samples Objects In Query `Gaussian & sigma < 3.0` = ", len(agg_query), "\n"
-)
-
-unique_tag = agg.search.unique_tag
-agg_query = agg.query(unique_tag == "gaussian_x1_1")
-
-print(agg_query.values("samples"))
-print("Total Samples Objects via unique tag Query = ", len(agg_query), "\n")
-
-"""
-__Files__
-
-Check that all other files stored in database (e.g. model, search) can be loaded and used.
-"""
-
-for model in agg.values("model"):
-    print(model.info)
-
-for search in agg.values("search"):
-    print(search)
-
-for samples_summary in agg.values("samples_summary"):
-    instance = samples_summary.max_log_likelihood()
-
-for info in agg.values("info"):
-    print(info["hi"])
-
-for covariance in agg.values("covariance"):
-    print(covariance)
-
-for data in agg.values("data"):
-    print(data)
-
-for noise_map in agg.values("noise_map"):
-    print(noise_map)
+print(f"samples time = {time.time() - start_time}")
