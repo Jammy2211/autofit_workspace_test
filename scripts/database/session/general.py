@@ -68,7 +68,20 @@ noise_map = af.util.numpy_array_from_json(
     file_path=path.join(dataset_path, "noise_map.json")
 )
 
-analysis = af.ex.Analysis(data=data, noise_map=noise_map)
+"""
+Default example Analysis does not output a .pickle file and does not test pickle loading.
+
+We extend the Analysis class to output the data as a pickle file, which we test can be loaded below
+"""
+
+
+class Analysis(af.ex.Analysis):
+    def save_attributes(self, paths: af.DirectoryPaths):
+        super().save_attributes(paths=paths)
+        paths.save_object(name="data_pickled", obj=self.data)
+
+
+analysis = Analysis(data=data, noise_map=noise_map)
 
 """
 Resultsare written directly to the `database.sqlite` file omitted hard-disc output entirely, which
@@ -82,9 +95,11 @@ search = af.DynestyStatic(
     number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
+    maxcall=100,
+    maxiter=100,
 )
 
-result = search.fit(model=model, analysis=analysis)
+result = search.fit(model=model, analysis=analysis, info={"hi": "there"})
 
 """
 __Database__
@@ -92,16 +107,7 @@ __Database__
 The results are not contained in the `output` folder after each search completes. Instead, they are
 contained in the `database.sqlite` file, which we can load using the `Aggregator`.
 """
-from autofit.database.aggregator import Aggregator
-
-try:
-    os.remove(path.join(database_file))
-except FileNotFoundError:
-    pass
-
-
-agg = Aggregator.from_database(path.join(database_file))
-agg.add_directory(directory=path.join("output", "database", "directory"))
+agg = af.Aggregator.from_database(path.join(database_file))
 
 """
 __Samples + Results__
@@ -144,3 +150,33 @@ agg_query = agg.query(unique_tag == "gaussian_x1_1")
 
 print(agg_query.values("samples"))
 print("Total Samples Objects via unique tag Query = ", len(agg_query), "\n")
+
+"""
+__Files__
+
+Check that all other files stored in database (e.g. model, search) can be loaded and used.
+"""
+
+for model in agg.values("model"):
+    print(model.info)
+
+for search in agg.values("search"):
+    print(search)
+
+for samples_summary in agg.values("samples_summary"):
+    instance = samples_summary.max_log_likelihood()
+
+for info in agg.values("info"):
+    print(info["hi"])
+
+for data in agg.values("dataset.data"):
+    print(data)
+
+for noise_map in agg.values("dataset.noise_map"):
+    print(noise_map)
+
+for data in agg.values("data_pickled"):
+    print(data)
+
+for covariance in agg.values("covariance"):
+    print(covariance)

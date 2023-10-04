@@ -105,7 +105,9 @@ except FileNotFoundError:
 
 agg = Aggregator.from_database(path.join(database_file))
 agg.add_directory(
-    directory=path.join("output", "database", "directory", dataset_name, "pickle_remove")
+    directory=path.join(
+        "output", "database", "directory", dataset_name, "pickle_remove"
+    )
 )
 
 """

@@ -67,7 +67,21 @@ noise_map = af.util.numpy_array_from_json(
     file_path=path.join(dataset_path, "noise_map.json")
 )
 
-analysis = af.ex.Analysis(data=data, noise_map=noise_map)
+"""
+Default example Analysis does not output a .pickle file and does not test pickle loading.
+
+We extend the Analysis class to output the data as a pickle file, which we test can be loaded below
+"""
+
+
+class Analysis(af.ex.Analysis):
+    def save_attributes(self, paths: af.DirectoryPaths):
+        super().save_attributes(paths=paths)
+        paths.save_object(name="data_pickled", obj=self.data)
+
+
+analysis = Analysis(data=data, noise_map=noise_map)
+
 
 """
 Results are written directly to the `database.sqlite` file omitted hard-disc output entirely, which
@@ -81,9 +95,11 @@ search = af.DynestyStatic(
     number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
+    maxcall=100,
+    maxiter=100,
 )
 
-result = search.fit(model=model, analysis=analysis, info={"hi" : "there"})
+result = search.fit(model=model, analysis=analysis, info={"hi": "there"})
 
 """
 __Database__
@@ -166,11 +182,14 @@ for samples_summary in agg.values("samples_summary"):
 for info in agg.values("info"):
     print(info["hi"])
 
-for covariance in agg.values("covariance"):
-    print(covariance)
-
-for data in agg.values("data"):
+for data in agg.values("dataset.data"):
     print(data)
 
-for noise_map in agg.values("noise_map"):
+for noise_map in agg.values("dataset.noise_map"):
     print(noise_map)
+
+for data in agg.values("data_pickled"):
+    print(data)
+
+for covariance in agg.values("covariance"):
+    print(covariance)

@@ -95,7 +95,7 @@ search = af.DynestyStatic(
 
 parent = af.DynestyStatic(name="parent")
 
-grid_search = af.SearchGridSearch(search=dynesty, number_of_steps=2, number_of_cores=1)
+grid_search = af.SearchGridSearch(search=search, number_of_steps=2, number_of_cores=1)
 
 grid_search_result = grid_search.fit(
     model=model, analysis=analysis, grid_priors=[model.gaussian.centre], parent=parent

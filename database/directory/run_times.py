@@ -125,7 +125,6 @@ Make sure database + agg can be used.
 start_time = time.time()
 
 for samples in agg.values("samples"):
-
     samples
 
 print(f"samples time = {time.time() - start_time}")

@@ -20,7 +20,9 @@ np.save(file="dataset/cosmology/data.npy", arr=data.native)
 
 output = aplt.Output(path="dataset/cosmology", filename="data", format="png")
 
-array_plotter = aplt.Array2DPlotter(array=data, mat_plot_2d=aplt.MatPlot2D(output=output))
+array_plotter = aplt.Array2DPlotter(
+    array=data, mat_plot_2d=aplt.MatPlot2D(output=output)
+)
 array_plotter.figure_2d()
 
 
@@ -35,22 +37,25 @@ np.save(file="dataset/cosmology/noise_map.npy", arr=noise_map.native)
 
 output = aplt.Output(path="dataset/cosmology", filename="noise_map", format="png")
 
-array_plotter = aplt.Array2DPlotter(array=noise_map, mat_plot_2d=aplt.MatPlot2D(output=output))
+array_plotter = aplt.Array2DPlotter(
+    array=noise_map, mat_plot_2d=aplt.MatPlot2D(output=output)
+)
 array_plotter.figure_2d()
-
 
 
 psf = al.Kernel2D.from_fits(
     file_path="dataset/cosmology/psf_in.fits", hdu=0, pixel_scales=0.05
 )
 
-psf = psf.resized_from(new_shape=(7,7))
+psf = psf.resized_from(new_shape=(7, 7))
 
 np.save(file="dataset/cosmology/psf.npy", arr=psf.native)
 
 output = aplt.Output(path="dataset/cosmology", filename="psf", format="png")
 
-array_plotter = aplt.Array2DPlotter(array=psf, mat_plot_2d=aplt.MatPlot2D(output=output))
+array_plotter = aplt.Array2DPlotter(
+    array=psf, mat_plot_2d=aplt.MatPlot2D(output=output)
+)
 array_plotter.figure_2d()
 
 
