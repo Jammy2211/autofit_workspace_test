@@ -2,20 +2,7 @@
 Feature: Database
 =================
 
-The default behaviour of **PyAutoFit** is for model-fitting results to be output to hard-disc in folders, which are
-straight forward to navigate and manually check. For small model-fitting tasks this is sufficient, however many users
-have a need to perform many model fits to very large datasets, making manual inspection of results time consuming.
-
-PyAutoFit's database feature outputs all model-fitting results as a
-sqlite3 (https://docs.python.org/3/library/sqlite3.html) relational database, such that all results
-can be efficiently loaded into a Jupyter notebook or Python script for inspection, analysis and interpretation. This
-database supports advanced querying, so that specific model-fits (e.g., which fit a certain model or dataset) can be
-loaded.
-
-This example extends our example of fitting a 1D `Gaussian` profile and fits 3 independent datasets each containing a
-1D Gaussian. The results will be written to a `.sqlite` database, which we will load to demonstrate the database.
-
-A full description of PyAutoFit's database tools is provided in the database chapter of the `HowToFit` lectures.
+Tests that the results of a grid search of searches can be loaded from hard-disk via a database built via a scrape.
 """
 # %matplotlib inline
 # from pyprojroot import here
@@ -69,8 +56,10 @@ noise_map = af.util.numpy_array_from_json(
 
 analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
+name = "grid_search"
+
 search = af.DynestyStatic(
-    path_prefix=path.join("database", "directory"),
+    path_prefix=path.join("database", "directory", name),
     name="extra_search",
     unique_tag=dataset_name,
     session=session,
@@ -85,8 +74,8 @@ may be limits on the number of files allowed. The commented out code below shows
 direct output to the `.sqlite` file. 
 """
 search = af.DynestyStatic(
-    name="grid_search",
-    path_prefix=path.join("database", "directory"),
+    name=name,
+    path_prefix=path.join("database", "directory", name),
     number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
@@ -117,8 +106,10 @@ except FileNotFoundError:
 
 agg = Aggregator.from_database(database_file, completed_only=False)
 
+assert len(agg) > 0
+
 start = time.time()
-agg.add_directory(directory=path.join("output", "database", "directory", dataset_name))
+agg.add_directory(directory=path.join("output", "database", "directory", name, dataset_name))
 print(f"Time to add directory to database {time.time() - start}")
 
 

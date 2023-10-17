@@ -40,13 +40,13 @@ __Dataset Names__
 
 Load the dataset from hard-disc, set up its `Analysis` class and fit it with a non-linear search. 
 """
-dataset_name = "gaussian_x1_with_feature"
+dataset_name = "gaussian_x1"
 
 """
 __Data__
 
 Load data of a 1D Gaussian from a .json file in the directory 
-`autofit_workspace/dataset/gaussian_x1_with_feature`.
+`autofit_workspace/dataset/gaussian_x1`.
 
 This 1D data includes a small feature to the right of the central `Gaussian`. This feature is a second `Gaussian` 
 centred on pixel 70. 
@@ -99,8 +99,10 @@ model = af.Collection(gaussian_main=af.ex.Gaussian)
 model.gaussian_main.centre = 50.0
 model.gaussian_main.sigma = 10.0
 
+name = "sensitivity"
+
 search = af.DynestyStatic(
-    path_prefix=path.join("database", "directory", "sensitivity"),
+    path_prefix=path.join("database", "directory", name),
     name="single_gaussian",
     nlive=25,
     unique_tag=dataset_name,
@@ -117,7 +119,7 @@ model.gaussian_feature.centre = 70.0
 model.gaussian_feature.sigma = 0.5
 
 search = af.DynestyStatic(
-    path_prefix=path.join("database", "directory", "sensitivity"),
+    path_prefix=path.join("database", "directory", name),
     name=("two_gaussians"),
     nlive=25,
     unique_tag=dataset_name,
@@ -253,7 +255,7 @@ def simulate_function(instance):
     data = model_line + noise
     noise_map = (1.0 / signal_to_noise_ratio) * np.ones(pixels)
 
-    return Imaging(data=data, noise_map=noise_map)
+    return Dataset(data=data, noise_map=noise_map)
 
 
 """
@@ -275,7 +277,7 @@ We next specify the search used to perform each model fit by the sensitivity map
 """
 search = af.DynestyStatic(
     path_prefix=path.join("database", "directory", "sensitivity"),
-    name="sensitivity_map",
+    name=name,
     nlive=25,
     unique_tag=dataset_name,
     session=session,
@@ -364,6 +366,8 @@ except FileNotFoundError:
     pass
 
 agg = Aggregator.from_database(database_file)
+
+assert len(agg) > 0
 
 start = time.time()
 agg.add_directory(directory=path.join("output", "database", "directory", "sensitivity"))
