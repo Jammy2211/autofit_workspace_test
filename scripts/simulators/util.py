@@ -1,3 +1,5 @@
+from autoconf.dictable import to_dict
+
 import autofit as af
 
 import json
@@ -67,4 +69,4 @@ def simulate_dataset_1d_via_gaussian_from(gaussian, dataset_path):
     model_file = path.join(dataset_path, "model.json")
 
     with open(model_file, "w+") as f:
-        json.dump(gaussian.dict(), f, indent=4)
+        json.dump(to_dict(gaussian), f, indent=4)

@@ -109,7 +109,9 @@ agg = Aggregator.from_database(database_file, completed_only=False)
 assert len(agg) > 0
 
 start = time.time()
-agg.add_directory(directory=path.join("output", "database", "directory", name, dataset_name))
+agg.add_directory(
+    directory=path.join("output", "database", "directory", name, dataset_name)
+)
 print(f"Time to add directory to database {time.time() - start}")
 
 
