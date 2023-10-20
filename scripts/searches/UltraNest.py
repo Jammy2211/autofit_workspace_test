@@ -73,7 +73,7 @@ We manually specify all of the Dynesty settings, descriptions of which are provi
 """
 search = af.UltraNest(
     path_prefix="searches",
-    name="UltraNest7",
+    name="UltraNest",
     resume=True,
     run_num=None,
     num_test_samples=2,
@@ -133,3 +133,20 @@ plt.xlabel("x values of profile")
 plt.ylabel("Profile normalization")
 plt.show()
 plt.close()
+
+"""
+__Search Null Paths__
+
+If no `name`, `path_prefix` or `unique_tag` is specified for the search, the results are not written to the hard-disk. 
+
+Internally, *PyAutoFit** makes the paths a `NullPath` object.
+
+This test checks that the search runs in this mode and that no results are written to hard-disk.
+"""
+search = af.UltraNest(
+    n_live=50,
+    max_iters=500,
+    max_ncalls=500,
+)
+
+result = search.fit(model=model, analysis=analysis)

@@ -108,3 +108,16 @@ plt.xlabel("x values of profile")
 plt.ylabel("Profile normalization")
 plt.show()
 plt.close()
+
+"""
+__Search Null Paths__
+
+If no `name`, `path_prefix` or `unique_tag` is specified for the search, the results are not written to the hard-disk. 
+
+Internally, *PyAutoFit** makes the paths a `NullPath` object.
+
+This test checks that the search runs in this mode and that no results are written to hard-disk.
+"""
+search = af.LBFGS()
+
+result = search.fit(model=model, analysis=analysis)

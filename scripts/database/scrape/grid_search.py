@@ -94,7 +94,6 @@ grid_search_result = grid_search.fit(
 Scrape directory to create .sqlite file.
 """
 import os
-import time
 from autofit.database.aggregator import Aggregator
 
 database_file = "database_directory_grid_search.sqlite"
@@ -106,14 +105,11 @@ except FileNotFoundError:
 
 agg = Aggregator.from_database(database_file, completed_only=False)
 
-assert len(agg) > 0
-
-start = time.time()
 agg.add_directory(
     directory=path.join("output", "database", "directory", name, dataset_name)
 )
-print(f"Time to add directory to database {time.time() - start}")
 
+assert len(agg) > 0
 
 """
 Make sure database + agg can be used.
@@ -124,11 +120,9 @@ samples_gen = agg.values("samples")
 When we convert this generator to a list and it, the outputs are 3 different SamplesMCMC instances. These correspond to 
 the 3 model-fits performed above.
 """
-start = time.time()
 gaussian = agg.model.gaussian
 agg_query = agg.query(gaussian == af.ex.Gaussian)
 print("Total queries for correct model = ", len(agg_query))
-print(f"Time to query based on correct model {time.time() - start} \n")
 
 name = agg.search.name
 agg_query = agg.query(name == "database_grid_search")
