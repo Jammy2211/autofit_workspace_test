@@ -220,7 +220,7 @@ features .
 """
 
 
-def simulate_function(instance):
+def simulate_function(instance, simulate_path):
     """
     Specify the number of pixels used to create the xvalues on which the 1D line of the profile is generated using and
     thus defining the number of data-points in our data.
@@ -240,7 +240,7 @@ def simulate_function(instance):
     print(instance.perturbation.normalization)
     print(instance.perturbation.sigma)
 
-    model_line = instance.gaussian_0.model_data_1d_via_xvalues_from(
+    model_line = instance.gaussian_main.model_data_1d_via_xvalues_from(
         xvalues=xvalues
     ) + instance.perturbation.model_data_1d_via_xvalues_from(xvalues=xvalues)
 
@@ -355,7 +355,6 @@ print(sensitivity_result.results[1].result.samples.log_evidence)
 Scrape directory to create .sqlite file.
 """
 import os
-import time
 from autofit.database.aggregator import Aggregator
 
 database_file = "database_directory_sensitivity.sqlite"
@@ -367,11 +366,9 @@ except FileNotFoundError:
 
 agg = Aggregator.from_database(database_file)
 
-assert len(agg) > 0
-
-start = time.time()
 agg.add_directory(directory=path.join("output", "database", "directory", "sensitivity"))
-print(f"Time to add directory to database {time.time() - start}")
+
+assert len(agg) > 0
 
 """
 Make sure database + agg can be used.
@@ -399,11 +396,9 @@ print(
 When we convert this generator to a list and it, the outputs are 3 different SamplesMCMC instances. These correspond to 
 the 3 model-fits performed above.
 """
-start = time.time()
 gaussian_main = agg.model.gaussian_main
 agg_query = agg.query(gaussian_main == af.ex.Gaussian)
 print("Total queries for correct model = ", len(agg_query))
-print(f"Time to query based on correct model {time.time() - start} \n")
 
 """
 Request 1: 
