@@ -146,47 +146,70 @@ print("\n\n***********************")
 print("**GRID RESULTS TESTING**")
 print("***********************\n\n")
 
-agg_grid_searches = agg.grid_searches()
-print("\n****Total aggregator via `grid_searches` query = ", len(agg_grid_searches), "****\n")
-unique_tag = agg_grid_searches.search.unique_tag
-agg_qrid = agg_grid_searches.query(unique_tag == "gaussian_x1")
+print(
+    "\n****Total aggregator via `grid_searches` query = ",
+    len(agg.grid_searches()),
+    "****\n",
+)
+unique_tag = agg.grid_searches().search.unique_tag
+agg_qrid = agg.grid_searches().query(unique_tag == "gaussian_x1")
 
 print(
     "****Total aggregator via `grid_searches` & unique tag query = ",
-    len(agg_grid_searches),
+    len(agg.grid_searches()),
     "****\n",
 )
 
 """
 The `GridSearchResult` is accessible via the database.
 """
-grid_search_result = list(agg_grid_searches)[0]["result"]
-print(f"****Best result (grid_search_result.best_result)****\n\n {grid_search_result.best_result}\n")
-print(f"****Grid Log Evidences (grid_search_result.log_evidences_native)****\n\n {grid_search_result.log_evidences_native}\n")
+print(f"****Best result (list(agg.grid_searches())[0]['result'].best_result)****\n\n")
+print(f"{list(agg.grid_searches())[0]['result'].best_result}\n")
+
+assert list(agg.grid_searches())[0]["result"].best_result.samples.log_evidence > -1e8
+
+print(
+    f"****Grid Log Evidences (list(agg.grid_searches())[0]['result'].log_evidences_native)****\n\n"
+)
+print(f"{list(agg.grid_searches())[0]['result'].log_evidences_native}\n")
+
+assert list(agg.grid_searches())[0]["result"].log_evidences_native[0] > -1e8
 
 """
 From the GridSearch, get an aggregator which contains only the maximum log likelihood model. E.g. if the 10th out of the 
 16 cells was the best fit:
 """
 print("\n\n****MAX LH AGGREGATOR VIA GRID****\n\n")
+print(
+    f"Max LH Gaussian sigma (agg.grid_searches().best_fits().values('instance')[0]) \n"
+)
+print(f"{agg.grid_searches().best_fits().values('instance')[0].gaussian.centre}")
 
-agg_best_fit = agg_grid_searches.best_fits()
-print(f"Max LH Gaussian sigma (agg_best_fit.values('instance')[0].gaussian.sigma) {agg_best_fit.values('instance')[0]}\n")
-print(f"Max LH samples (agg_best_fit.values('samples')[0]) {agg_best_fit.values('samples')[0]}")
+assert agg.grid_searches().best_fits().values("instance")[0].gaussian.centre > 0.0
 
+print(f"Max LH samples (agg.grid_searches().best_fits().values('samples')[0])\n")
+print({agg.grid_searches().best_fits().values("samples")[0]})
+
+assert (
+    agg.grid_searches().best_fits().values("samples")[0].log_likelihood_list[-1] > -1e8
+)
 
 """
 From the GridSearch, get an aggregator for any of the grid cells.
 """
 print("\n\n****AGGREGATOR FROM INPUT GRID CELL****\n\n")
 
-cell_aggregator = agg_grid_searches.cell_number(1)
-print(f"Cell Aggregator (agg_grid_searches.cell_number(1)) {cell_aggregator}")
+cell_aggregator = agg.grid_searches().cell_number(1)
+print(f"Cell Aggregator (agg.grid_searches().cell_number(1)) {cell_aggregator}")
 print("Size of Agg cell = ", len(cell_aggregator), "\n")
+
+assert cell_aggregator.values("instance")[0].gaussian.centre > 0.0
 
 """
 Stored and prints input parent grid of grid search.
 """
 
-for fit in agg_best_fit:
+for fit in agg.grid_searches().best_fits():
     print(f"Grid Search Parent (fit.parent): {fit.parent}")
+
+    assert fit.parent is not None

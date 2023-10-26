@@ -394,7 +394,11 @@ print("**GRID RESULTS TESTING**")
 print("***********************\n\n")
 
 agg_grid_searches = agg.grid_searches()
-print("\n****Total aggregator via `grid_searches` query = ", len(agg_grid_searches), "****\n")
+print(
+    "\n****Total aggregator via `grid_searches` query = ",
+    len(agg_grid_searches),
+    "****\n",
+)
 unique_tag = agg_grid_searches.search.unique_tag
 agg_qrid = agg_grid_searches.query(unique_tag == "gaussian_x1")
 

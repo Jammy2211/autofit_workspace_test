@@ -125,4 +125,3 @@ search = af.Emcee(
 )
 
 result = search.fit(model=model, analysis=analysis)
-

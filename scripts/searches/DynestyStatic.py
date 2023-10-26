@@ -122,8 +122,6 @@ Internally, *PyAutoFit** makes the paths a `NullPath` object.
 
 This test checks that the search runs in this mode and that no results are written to hard-disk.
 """
-search = af.DynestyStatic(
-    nlive=50
-)
+search = af.DynestyStatic(nlive=50)
 
 result = search.fit(model=model, analysis=analysis)
