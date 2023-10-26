@@ -2,8 +2,8 @@
 Feature: Database
 =================
 
-Tests that general results can be loaded from hard-disk via a database built via a database that is written to
-during a fit.
+Tests that the results of a fit which sums multiple Analysis classes together can be loaded from hard-disk via a
+database built via a scrape.
 """
 # %matplotlib inline
 # from pyprojroot import here
@@ -72,16 +72,21 @@ class Analysis(af.ex.Analysis):
 analysis = Analysis(data=data, noise_map=noise_map)
 
 """
-Resultsare written directly to the `database.sqlite` file omitted hard-disc output entirely, which
+This script tests loading tools works when multiple analysis classes are used and summed together.
+"""
+analysis = sum([analysis, analysis])
+
+"""
+Results are written directly to the `database.sqlite` file omitted hard-disc output entirely, which
 can be important for performing large model-fitting tasks on high performance computing facilities where there
 may be limits on the number of files allowed. The commented out code below shows how one would perform
 direct output to the `.sqlite` file. 
 """
-name = "general"
+name = "multi_analysis"
 
 search = af.DynestyStatic(
     name=name,
-    path_prefix=path.join("database", "session"),
+    path_prefix=path.join("database", "directory"),
     number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
@@ -103,6 +108,10 @@ __Samples + Results__
 
 Make sure database + agg can be used.
 """
+print("\n\n***********************")
+print("****RESULTS TESTING****")
+print("***********************\n")
+
 for samples in agg.values("samples"):
     print(samples.parameter_lists[0])
 
@@ -112,6 +121,10 @@ print(mp_instances)
 """
 __Queries__
 """
+print("\n\n***********************")
+print("****QUERIES TESTING****")
+print("***********************\n")
+
 path_prefix = agg.search.path_prefix
 agg_query = agg.query(path_prefix == path.join("database", "session", dataset_name))
 print("Total Samples Objects via `path_prefix` model query = ", len(agg_query), "\n")
@@ -145,28 +158,31 @@ __Files__
 
 Check that all other files stored in database (e.g. model, search) can be loaded and used.
 """
+print("\n\n***********************")
+print("*****FILES TESTING*****")
+print("***********************\n")
 
 for model in agg.values("model"):
-    print(f"\nModel Info (model):\n{model.info}")
+    print(f"\n****Model Info (model)****\n\n{model.info}")
 
 for search in agg.values("search"):
-    print(f"\nSearch (search):\n{search}")
+    print(f"\n****Search (search)****\n\n{search}")
 
 for samples_summary in agg.values("samples_summary"):
     instance = samples_summary.max_log_likelihood()
-    print(f"\nMax Log Likelihood (samples_summary):\n{instance}")
+    print(f"\n****Max Log Likelihood (samples_summary)****\n\n{instance}")
 
 for info in agg.values("info"):
-    print(f"\nInfo:\n{info}")
+    print(f"\n****Info****\n\n{info}")
 
-for data in agg.values("dataset.data"):
-    print(f"\nData (dataset.data):\n{data}")
+for data in agg.child_values("dataset.data"):
+    print(f"\n****Data (dataset.data)****\n\n{data}")
 
-for noise_map in agg.values("dataset.noise_map"):
-    print(f"\nNoise Map (dataset.noise_map):\n{noise_map}")
+for noise_map in agg.child_values("dataset.noise_map"):
+    print(f"\n****Noise Map (dataset.noise_map)****\n\n{noise_map}")
 
-for data in agg.values("data_pickled"):
-    print(f"\nData (data_pickled):\n{data}")
+for data in agg.child_values("data_pickled"):
+    print(f"\n****Data (data_pickled)****\n\n{data}")
 
 for covariance in agg.values("covariance"):
-    print(f"\nCovariance (covariance):\n{covariance}")
+    print(f"\n****Covariance (covariance)****\n\n{covariance}")

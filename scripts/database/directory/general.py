@@ -91,9 +91,6 @@ result = search.fit(model=model, analysis=analysis, info={"hi": "there"})
 
 """
 __Database__
-
-The results are not contained in the `output` folder after each search completes. Instead, they are
-contained in the `database.sqlite` file, which we can load using the `Aggregator`.
 """
 from autofit.aggregator.aggregator import Aggregator
 
@@ -152,25 +149,26 @@ Check that all other files stored in database (e.g. model, search) can be loaded
 """
 
 for model in agg.values("model"):
-    print(model.info)
+    print(f"\nModel Info (model):\n{model.info}")
 
 for search in agg.values("search"):
-    print(search)
+    print(f"\nSearch (search):\n{search}")
 
 for samples_summary in agg.values("samples_summary"):
     instance = samples_summary.max_log_likelihood()
+    print(f"\nMax Log Likelihood (samples_summary):\n{instance}")
 
 for info in agg.values("info"):
-    print(info["hi"])
+    print(f"\nInfo:\n{info}")
 
 for data in agg.values("dataset.data"):
-    print(data)
+    print(f"\nData (dataset.data):\n{data}")
 
 for noise_map in agg.values("dataset.noise_map"):
-    print(noise_map)
+    print(f"\nNoise Map (dataset.noise_map):\n{noise_map}")
 
 for data in agg.values("data_pickled"):
-    print(data)
+    print(f"\nData (data_pickled):\n{data}")
 
 for covariance in agg.values("covariance"):
-    print(covariance)
+    print(f"\nCovariance (covariance):\n{covariance}")

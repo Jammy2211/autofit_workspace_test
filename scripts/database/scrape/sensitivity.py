@@ -371,31 +371,39 @@ agg.add_directory(directory=path.join("output", "database", "directory", "sensit
 assert len(agg) > 0
 
 """
+__Samples + Results__
+
 Make sure database + agg can be used.
 """
-samples_gen = agg.values("samples")
+print("\n\n***********************")
+print("****RESULTS TESTING****")
+print("***********************\n")
+
+for samples in agg.values("samples"):
+    print(samples.parameter_lists[0])
+
+mp_instances = [samps.median_pdf() for samps in agg.values("samples")]
+print(mp_instances)
 
 """
-Request 0:
-
 Test that we can retrieve an aggregator with only the sensitivity grid search results (I have tried using 
 the `grid_searches())` API below, but I dont know if this should be `sensitivity_searches` instead.
 """
+print("\n\n***********************")
+print("**GRID RESULTS TESTING**")
+print("***********************\n\n")
+
 agg_grid_searches = agg.grid_searches()
-print("Total aggregator via `grid_searches` query = ", len(agg_grid_searches), "\n")
+print("\n****Total aggregator via `grid_searches` query = ", len(agg_grid_searches), "****\n")
 unique_tag = agg_grid_searches.search.unique_tag
 agg_qrid = agg_grid_searches.query(unique_tag == "gaussian_x1")
 
 print(
-    "Total aggregator via `grid_searches` & unique tag query = ",
+    "****Total aggregator via `grid_searches` & unique tag query = ",
     len(agg_grid_searches),
-    "\n",
+    "****\n",
 )
 
-"""
-When we convert this generator to a list and it, the outputs are 3 different SamplesMCMC instances. These correspond to 
-the 3 model-fits performed above.
-"""
 gaussian_main = agg.model.gaussian_main
 agg_query = agg.query(gaussian_main == af.ex.Gaussian)
 print("Total queries for correct model = ", len(agg_query))

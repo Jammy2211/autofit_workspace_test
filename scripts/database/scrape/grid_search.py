@@ -59,7 +59,7 @@ analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 name = "grid_search"
 
 search = af.DynestyStatic(
-    path_prefix=path.join("database", "directory", name),
+    path_prefix=path.join("database", "scrape", name),
     name="extra_search",
     unique_tag=dataset_name,
     session=session,
@@ -75,7 +75,7 @@ direct output to the `.sqlite` file.
 """
 search = af.DynestyStatic(
     name=name,
-    path_prefix=path.join("database", "directory", name),
+    path_prefix=path.join("database", "scrape", name),
     number_of_cores=1,
     unique_tag=dataset_name,
     session=session,
@@ -106,7 +106,7 @@ except FileNotFoundError:
 agg = Aggregator.from_database(database_file, completed_only=False)
 
 agg.add_directory(
-    directory=path.join("output", "database", "directory", name, dataset_name)
+    directory=path.join("output", "database", "scrape", name, dataset_name)
 )
 
 assert len(agg) > 0
@@ -114,12 +114,23 @@ assert len(agg) > 0
 """
 Make sure database + agg can be used.
 """
-samples_gen = agg.values("samples")
+print("\n\n***********************")
+print("****RESULTS TESTING****")
+print("***********************\n")
+
+for samples in agg.values("samples"):
+    print(samples.parameter_lists[0])
+
+mp_instances = [samps.median_pdf() for samps in agg.values("samples")]
+print(mp_instances)
 
 """
-When we convert this generator to a list and it, the outputs are 3 different SamplesMCMC instances. These correspond to 
-the 3 model-fits performed above.
+__Queries__
 """
+print("\n\n***********************")
+print("****QUERIES TESTING****")
+print("***********************\n")
+
 gaussian = agg.model.gaussian
 agg_query = agg.query(gaussian == af.ex.Gaussian)
 print("Total queries for correct model = ", len(agg_query))
@@ -129,44 +140,48 @@ agg_query = agg.query(name == "database_grid_search")
 print("Total Samples Objects via `name` model query = ", len(agg_query), "\n")
 
 """
-Test that we can retrieve an aggregator with only the grid search results:
+__Grid Search Results__
 """
+print("\n\n***********************")
+print("**GRID RESULTS TESTING**")
+print("***********************\n\n")
+
 agg_grid_searches = agg.grid_searches()
-print("Total aggregator via `grid_searches` query = ", len(agg_grid_searches), "\n")
+print("\n****Total aggregator via `grid_searches` query = ", len(agg_grid_searches), "****\n")
 unique_tag = agg_grid_searches.search.unique_tag
 agg_qrid = agg_grid_searches.query(unique_tag == "gaussian_x1")
 
 print(
-    "Total aggregator via `grid_searches` & unique tag query = ",
+    "****Total aggregator via `grid_searches` & unique tag query = ",
     len(agg_grid_searches),
-    "\n",
+    "****\n",
 )
 
 """
 The `GridSearchResult` is accessible via the database.
 """
 grid_search_result = list(agg_grid_searches)[0]["result"]
-print(grid_search_result.best_result)
-print(grid_search_result.log_evidences_native)
+print(f"****Best result (grid_search_result.best_result)****\n\n {grid_search_result.best_result}\n")
+print(f"****Grid Log Evidences (grid_search_result.log_evidences_native)****\n\n {grid_search_result.log_evidences_native}\n")
 
 """
 From the GridSearch, get an aggregator which contains only the maximum log likelihood model. E.g. if the 10th out of the 
 16 cells was the best fit:
 """
+print("\n\n****MAX LH AGGREGATOR VIA GRID****\n\n")
+
 agg_best_fit = agg_grid_searches.best_fits()
-print("Size of Agg best fit = ", len(agg_best_fit), "\n")
-instance = agg_best_fit.values("instance")[0]
-print(instance.gaussian.sigma)
-samples = agg_best_fit.values("samples")[0]
-print(samples)
+print(f"Max LH Gaussian sigma (agg_best_fit.values('instance')[0].gaussian.sigma) {agg_best_fit.values('instance')[0]}\n")
+print(f"Max LH samples (agg_best_fit.values('samples')[0]) {agg_best_fit.values('samples')[0]}")
+
 
 """
-Reqest 3:
-
 From the GridSearch, get an aggregator for any of the grid cells.
 """
+print("\n\n****AGGREGATOR FROM INPUT GRID CELL****\n\n")
+
 cell_aggregator = agg_grid_searches.cell_number(1)
-print(cell_aggregator)
+print(f"Cell Aggregator (agg_grid_searches.cell_number(1)) {cell_aggregator}")
 print("Size of Agg cell = ", len(cell_aggregator), "\n")
 
 """
@@ -174,4 +189,4 @@ Stored and prints input parent grid of grid search.
 """
 
 for fit in agg_best_fit:
-    print(fit.parent)
+    print(f"Grid Search Parent (fit.parent): {fit.parent}")

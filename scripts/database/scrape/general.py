@@ -92,9 +92,6 @@ result = search.fit(model=model, analysis=analysis, info={"hi": "there"})
 
 """
 __Database__
-
-The results are not contained in the `output` folder after each search completes. Instead, they are
-contained in the `database.sqlite` file, which we can load using the `Aggregator`.
 """
 from autofit.database.aggregator import Aggregator
 
@@ -118,6 +115,10 @@ __Samples + Results__
 
 Make sure database + agg can be used.
 """
+print("\n\n***********************")
+print("****RESULTS TESTING****")
+print("***********************\n")
+
 for samples in agg.values("samples"):
     print(samples.parameter_lists[0])
 
@@ -127,6 +128,10 @@ print(mp_instances)
 """
 __Queries__
 """
+print("\n\n***********************")
+print("****QUERIES TESTING****")
+print("***********************\n")
+
 path_prefix = agg.search.path_prefix
 agg_query = agg.query(path_prefix == path.join("database", "session", dataset_name))
 print("Total Samples Objects via `path_prefix` model query = ", len(agg_query), "\n")
@@ -160,27 +165,31 @@ __Files__
 
 Check that all other files stored in database (e.g. model, search) can be loaded and used.
 """
+print("\n\n***********************")
+print("*****FILES TESTING*****")
+print("***********************\n")
 
 for model in agg.values("model"):
-    print(model.info)
+    print(f"\n****Model Info (model)****\n\n{model.info}")
 
 for search in agg.values("search"):
-    print(search)
+    print(f"\n****Search (search)****\n\n{search}")
 
 for samples_summary in agg.values("samples_summary"):
     instance = samples_summary.max_log_likelihood()
+    print(f"\n****Max Log Likelihood (samples_summary)****\n\n{instance}")
 
 for info in agg.values("info"):
-    print(info["hi"])
+    print(f"\n****Info****\n\n{info}")
 
 for data in agg.values("dataset.data"):
-    print(data)
+    print(f"\n****Data (dataset.data)****\n\n{data}")
 
 for noise_map in agg.values("dataset.noise_map"):
-    print(noise_map)
+    print(f"\n****Noise Map (dataset.noise_map)****\n\n{noise_map}")
 
 for data in agg.values("data_pickled"):
-    print(data)
+    print(f"\n****Data (data_pickled)****\n\n{data}")
 
 for covariance in agg.values("covariance"):
-    print(covariance)
+    print(f"\n****Covariance (covariance)****\n\n{covariance}")
