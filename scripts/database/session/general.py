@@ -147,26 +147,34 @@ Check that all other files stored in database (e.g. model, search) can be loaded
 """
 
 for model in agg.values("model"):
-    print(f"\nModel Info (model):\n{model.info}")
+    print(f"\n****Model Info (model)****\n\n{model.info}")
+    assert model.info[0] == "T"
 
 for search in agg.values("search"):
-    print(f"\nSearch (search):\n{search}")
+    print(f"\n****Search (search)****\n\n{search}")
+    assert search.paths.name == "general"
 
 for samples_summary in agg.values("samples_summary"):
     instance = samples_summary.max_log_likelihood()
-    print(f"\nMax Log Likelihood (samples_summary):\n{instance}")
+    print(f"\n****Max Log Likelihood (samples_summary)****\n\n{instance}")
+    assert instance.gaussian.centre > 0.0
 
 for info in agg.values("info"):
-    print(f"\nInfo:\n{info}")
+    print(f"\n****Info****\n\n{info}")
+    assert info["hi"] == "there"
 
 for data in agg.values("dataset.data"):
-    print(f"\nData (dataset.data):\n{data}")
+    print(f"\n****Data (dataset.data)****\n\n{data}")
+    assert data[0] > -1.0e8
 
 for noise_map in agg.values("dataset.noise_map"):
-    print(f"\nNoise Map (dataset.noise_map):\n{noise_map}")
+    print(f"\n****Noise Map (dataset.noise_map)****\n\n{noise_map}")
+    assert noise_map[0] > 0.0
 
 for data in agg.values("data_pickled"):
-    print(f"\nData (data_pickled):\n{data}")
+    print(f"\n****Data (data_pickled)****\n\n{data}")
+    assert data[0] > -1.0e8
 
 for covariance in agg.values("covariance"):
-    print(f"\nCovariance (covariance):\n{covariance}")
+    print(f"\n****Covariance (covariance)****\n\n{covariance}")
+    assert covariance[0][0] > 0.0
