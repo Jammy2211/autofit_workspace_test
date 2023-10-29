@@ -84,6 +84,8 @@ search = af.DynestyStatic(
 
 parent = af.DynestyStatic(name="parent")
 
+parent.fit(model=model, analysis=analysis)
+
 grid_search = af.SearchGridSearch(search=search, number_of_steps=2, number_of_cores=1)
 
 grid_search_result = grid_search.fit(
@@ -163,10 +165,10 @@ print(
 """
 The `GridSearchResult` is accessible via the database.
 """
-print(f"****Best result (list(agg.grid_searches())[0]['result'].best_result)****\n\n")
-print(f"{list(agg.grid_searches())[0]['result'].best_result}\n")
+print(f"****Best result (list(agg.grid_searches())[0]['result'].best_samples)****\n\n")
+print(f"{list(agg.grid_searches())[0]['result'].best_samples}\n")
 
-assert list(agg.grid_searches())[0]["result"].best_result.samples.log_evidence > -1e8
+assert list(agg.grid_searches())[0]["result"].best_samples.log_evidence > -1e8
 
 print(
     f"****Grid Log Evidences (list(agg.grid_searches())[0]['result'].log_evidences_native)****\n\n"
@@ -213,3 +215,5 @@ for fit in agg.grid_searches().best_fits():
     print(f"Grid Search Parent (fit.parent): {fit.parent}")
 
     assert fit.parent is not None
+    assert fit.parent.samples is not None
+    assert fit.parent.instance is not None
