@@ -162,6 +162,10 @@ print(
     "****\n",
 )
 
+print(
+    f"****Extract individual parameters on grid via (attribute_grid) {agg.grid_searches()[0]['result'].attribute_grid('gaussian.centre')}****\n\n"
+)
+
 """
 The `GridSearchResult` is accessible via the database.
 """
