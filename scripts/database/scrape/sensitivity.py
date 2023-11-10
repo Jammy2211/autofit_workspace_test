@@ -224,10 +224,10 @@ class Analysis(af.ex.Analysis):
 We now write the `simulate_cls`, which takes the `simulation_instance` of our model (defined above) and uses it to 
 simulate a dataset which is subsequently fitted.
 
-Note that when this dataset is simulated, the quantity `instance.perturbation` is used in the `simulate_cls`.
+Note that when this dataset is simulated, the quantity `instance.perturb` is used in the `simulate_cls`.
 This is an instance of the `gaussian_feature`, and it is different every time the `simulate_cls` is called. 
 
-In this example, this `instance.perturbation` corresponds to two different `gaussian_feature` with values of
+In this example, this `instance.perturb` corresponds to two different `gaussian_feature` with values of
 `normalization` of 0.01 and 100.0, such that our simulated datasets correspond to a very faint and very bright gaussian 
 features .
 """
@@ -288,13 +288,13 @@ class Simulate:
         based on its prior.
         """
 
-        print(instance.perturbation.centre)
-        print(instance.perturbation.normalization)
-        print(instance.perturbation.sigma)
+        print(instance.perturb.centre)
+        print(instance.perturb.normalization)
+        print(instance.perturb.sigma)
 
         model_line = instance.gaussian_main.model_data_1d_via_xvalues_from(
             xvalues=xvalues
-        ) + instance.perturbation.model_data_1d_via_xvalues_from(xvalues=xvalues)
+        ) + instance.perturb.model_data_1d_via_xvalues_from(xvalues=xvalues)
 
         """
         Determine the noise (at a specified signal to noise level) in every pixel of our model profile.
@@ -436,20 +436,25 @@ class PerturbFit:
 We can now combine all of the objects created above and perform sensitivity mapping. The inputs to the `Sensitivity`
 object below are:
 
-- `simulation_instance`: This is an instance of the model used to simulate every dataset that is fitted. In this example it 
-contains an instance of the `gaussian_main` model component.
+- `simulation_instance`: This is an instance of the model used to simulate every dataset that is fitted. In this 
+example it contains an instance of the `gaussian_main` model component.
 
-- `base_model`: This is the simpler model that is fitted to every simulated dataset, which in this example is composed of 
-a single `Gaussian` called the `gaussian_main`.
+- `base_model`: This is the simpler model that is fitted to every simulated dataset, which in this example is composed 
+of a single `Gaussian` called the `gaussian_main`.
 
-- `perturb_model`: This is the extra model component that alongside the `base_model` is fitted to every simulated 
-dataset, which in this example  is composed of two `Gaussians` called the `gaussian_main` and `gaussian_feature`.
+- `perturb_model`: This is the extra model component that has two roles: (i) based on the sensitivity grid parameters
+it is added to the `simulation_instance` to simulate each dataset ; (ii) it is added to the`base_model` and fitted to 
+every simulated dataset (in this example every `simulation_instance` and `perturb_model` there has two `Gaussians` 
+called the `gaussian_main` and `gaussian_feature`).
 
 - `simulate_cls`: This is the function that uses the `simulation_instance` and many instances of the `perturb_model` 
-to simulate many datasets that are fitted with the `base_model` and `base_model` + `perturb_model`.
+to simulate many datasets which are fitted with the `base_model` and `base_model` + `perturb_model`.
 
-- `analysis_class`: The wrapper `Analysis` class that passes each simulated dataset to the `Analysis` class that fits 
-the data.
+- `base_fit_cls`: This is the function that fits the `base_model` to every simulated dataset and returns the
+goodness-of-fit of the model to the data.
+
+- `perturb_fit_cls`: This is the function that fits the `base_model` + `perturb_model` to every simulated dataset and
+returns the goodness-of-fit of the model to the data.
 
 - `number_of_steps`: The number of steps over which the parameters in the `perturb_model` are iterated. In this 
 example, normalization has a `LogUniformPrior` with lower limit 1e-4 and upper limit 1e2, therefore the `number_of_steps` 
