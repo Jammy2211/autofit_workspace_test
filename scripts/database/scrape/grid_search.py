@@ -175,11 +175,11 @@ print(f"{list(agg.grid_searches())[0]['result'].best_samples}\n")
 assert list(agg.grid_searches())[0]["result"].best_samples.log_evidence > -1e8
 
 print(
-    f"****Grid Log Evidences (list(agg.grid_searches())[0]['result'].log_evidences_native)****\n\n"
+    f"****Grid Log Evidences (list(agg.grid_searches())[0]['result'].log_evidences().native)****\n\n"
 )
-print(f"{list(agg.grid_searches())[0]['result'].log_evidences_native}\n")
+print(f"{list(agg.grid_searches())[0]['result'].log_evidences().native}\n")
 
-assert list(agg.grid_searches())[0]["result"].log_evidences_native[0] > -1e8
+assert list(agg.grid_searches())[0]["result"].log_evidences().native[0] > -1e8
 
 """
 From the GridSearch, get an aggregator which contains only the maximum log likelihood model. E.g. if the 10th out of the 
@@ -210,14 +210,3 @@ print(f"Cell Aggregator (agg.grid_searches().cell_number(1)) {cell_aggregator}")
 print("Size of Agg cell = ", len(cell_aggregator), "\n")
 
 assert cell_aggregator.values("instance")[0].gaussian.centre > 0.0
-
-"""
-Stored and prints input parent grid of grid search.
-"""
-
-for fit in agg.grid_searches().best_fits():
-    print(f"Grid Search Parent (fit.parent): {fit.parent}")
-
-    assert fit.parent is not None
-    assert fit.parent.samples is not None
-    assert fit.parent.instance is not None

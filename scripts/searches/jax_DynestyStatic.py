@@ -16,7 +16,7 @@ Information about Dynesty can be found at the following links:
 # print(f"Working Directory has been set to `{workspace_path}`")
 
 import matplotlib.pyplot as plt
-import numpy as np
+from autofit.jax_wrapper import numpy as np
 from os import path
 
 import autofit as af
@@ -69,8 +69,9 @@ We manually specify all of the Dynesty settings, descriptions of which are provi
 """
 search = af.DynestyStatic(
     path_prefix="searches",
-    name="DynestyStatic",
+    name="jax_DynestyStatic",
     nlive=50,
+    use_gradient=True,
     bound="multi",
     sample="auto",
     bootstrap=None,
@@ -81,8 +82,8 @@ search = af.DynestyStatic(
     slices=5,
     fmove=0.9,
     max_move=100,
-    iterations_per_update=10000,
-    number_of_cores=1,
+    iterations_per_update=25,
+    number_of_cores=2,
 )
 
 result = search.fit(model=model, analysis=analysis)
