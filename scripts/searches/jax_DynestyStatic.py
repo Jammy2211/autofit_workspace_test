@@ -57,6 +57,10 @@ model.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=30.0)
 
 analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
+instance = model.instance_from_prior_medians()
+
+
+
 """
 __Search__
 
@@ -82,7 +86,7 @@ search = af.DynestyStatic(
     slices=5,
     fmove=0.9,
     max_move=100,
-    iterations_per_update=25,
+    iterations_per_update=100000,
     number_of_cores=2,
 )
 

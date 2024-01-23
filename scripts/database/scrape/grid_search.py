@@ -68,7 +68,7 @@ search = af.DynestyStatic(
 search.fit(model=model, analysis=analysis)
 
 """
-Resultsare written directly to the `database.sqlite` file omitted hard-disc output entirely, which
+Result sare written directly to the `database.sqlite` file omitted hard-disc output entirely, which
 can be important for performing large model-fitting tasks on high performance computing facilities where there
 may be limits on the number of files allowed. The commented out code below shows how one would perform
 direct output to the `.sqlite` file. 
@@ -82,14 +82,10 @@ search = af.DynestyStatic(
     force_x1_cpu=True,  # ensures parallelizing over grid search works.
 )
 
-parent = af.DynestyStatic(name="parent")
-
-parent.fit(model=model, analysis=analysis)
-
 grid_search = af.SearchGridSearch(search=search, number_of_steps=2, number_of_cores=1)
 
 grid_search_result = grid_search.fit(
-    model=model, analysis=analysis, grid_priors=[model.gaussian.centre], parent=parent
+    model=model, analysis=analysis, grid_priors=[model.gaussian.centre],
 )
 
 """
