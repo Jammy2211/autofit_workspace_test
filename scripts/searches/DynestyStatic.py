@@ -53,7 +53,8 @@ model = af.Model(af.ex.Gaussian)
 
 model.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
 model.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
-model.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=30.0)
+# model.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=30.0)
+model.sigma = af.LogGaussianPrior(mean=10.0, sigma=5.0)
 
 analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
