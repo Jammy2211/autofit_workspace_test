@@ -3,6 +3,9 @@ Feature: Database
 =================
 
 Tests that general results can be loaded from hard-disk via directory aggregation.
+
+This script outputs all files which can be associated with a model-fit (e.g. samples, full samples summary, search
+output). This can take up large amounts of hard-disk space.
 """
 # %matplotlib inline
 # from pyprojroot import here
@@ -155,12 +158,13 @@ for model in agg.values("model"):
 for search in agg.values("search"):
     print(f"\n****Search (search)****\n\n{search}")
     assert search.paths.name == "general"
-    assert path.join("database", "directory", unique_tag) in search.paths.output_path
+    assert path.join("database", "directory", dataset_name) in str(search.paths.output_path)
 
 for samples_summary in agg.values("samples_summary"):
     instance = samples_summary.max_log_likelihood()
     print(f"\n****Max Log Likelihood (samples_summary)****\n\n{instance}")
     assert instance.gaussian.centre > 0.0
+    print(samples_summary.max_log_likelihood_sample.log_likelihood)
 
 for info in agg.values("info"):
     print(f"\n****Info****\n\n{info}")

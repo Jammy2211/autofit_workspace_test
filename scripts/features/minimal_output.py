@@ -1,21 +1,43 @@
 """
-Feature: Database
-=================
+Feature: Minimal Output
+=======================
 
-Tests that the results of a fit which sums multiple Analysis classes together can be loaded from hard-disk via a
-database built via a scrape.
+The output of a PyAutoFit model-fit can be customized in order to reduce hard-disk space use and clutter in the
+output folder.
+
+This script tests functionality when the minimal amount of samples and other files are output, including:
+
+ 1) Resuming a fit and loading a completed fit.
+ 2) Search chaining and prior linking.
+ 3) Database functionality with files missing.
+
+ __Config__
+
+We begin by pointing to the minimal_output config folder, which has configuration file settings update to produce
+minimal output.
+
+The following settings are listed as false in the `output.yaml` file, meaning the corresponding files will not be
+outptu (which assertions test for below):
+
+covariance
 """
+import os
+from os import path
+
+cwd = os.getcwd()
+
+from autoconf import conf
+
+conf.instance.push(new_path=path.join(cwd, "config", "minimal_output"))
+
 # %matplotlib inline
 # from pyprojroot import here
 # workspace_path = str(here())
 # %cd $workspace_path
 # print(f"Working Directory has been set to `{workspace_path}`")
 
-import autofit as af
-
-import os
-from os import path
 import numpy as np
+import autofit as af
 
 """
 __Dataset Names__
@@ -38,15 +60,6 @@ model.gaussian.sigma = af.GaussianPrior(
 )
 
 """
-___Session__
-
-To output results directly to the database, we start a session, which includes the name of the database `.sqlite` file
-where results are stored.
-"""
-database_file = "database_session_general.sqlite"
-session = af.db.open_database(database_file)
-
-"""
 The code below loads the dataset and sets up the Analysis class.
 """
 dataset_path = path.join("dataset", "example_1d", dataset_name)
@@ -56,50 +69,48 @@ noise_map = af.util.numpy_array_from_json(
     file_path=path.join(dataset_path, "noise_map.json")
 )
 
-"""
-Default example Analysis does not output a .pickle file and does not test pickle loading.
+analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
-We extend the Analysis class to output the data as a pickle file, which we test can be loaded below
-"""
-
-
-class Analysis(af.ex.Analysis):
-    def save_attributes(self, paths: af.DirectoryPaths):
-        super().save_attributes(paths=paths)
-        paths.save_object(name="data_pickled", obj=self.data)
-
-
-analysis = Analysis(data=data, noise_map=noise_map)
-
-"""
-This script tests loading tools works when multiple analysis classes are used and summed together.
-"""
-analysis = sum([analysis, analysis])
-
-"""
-Results are written directly to the `database.sqlite` file omitted hard-disc output entirely, which
-can be important for performing large model-fitting tasks on high performance computing facilities where there
-may be limits on the number of files allowed. The commented out code below shows how one would perform
-direct output to the `.sqlite` file. 
-"""
-name = "multi_analysis"
+name = "simple"
 
 search = af.DynestyStatic(
     name=name,
-    path_prefix=path.join("database", "directory"),
+    path_prefix=path.join("features", "minimal_output"),
     number_of_cores=1,
     unique_tag=dataset_name,
-    session=session,
-    maxcall=100,
-    maxiter=100,
 )
 
-result = search.fit(model=model, analysis=analysis, info={"hi": "there"})
+result = search.fit(model=model, analysis=analysis)
+
+"""
+__Completion__
+
+Confirm that a completed run does not raise an exception.
+"""
+result = search.fit(model=model, analysis=analysis)
+
+"""
+__Assertions__
+
+The following files have been disabled via the ? config file.
+
+The assertions below check that the associated files have not been output.
+
+ - The `search_internal` folder.
+"""
+assert not path.exists(search.paths._files_path / "search_internal")
+assert not path.exists(search.paths._files_path / "covariance.csv")
+
+aaa
 
 """
 __Database__
 """
-agg = af.Aggregator.from_database(path.join(database_file))
+from autofit.aggregator.aggregator import Aggregator
+
+agg = Aggregator.from_directory(
+    directory=path.join("output", "database", "directory", dataset_name, name),
+)
 
 assert len(agg) > 0
 
@@ -108,10 +119,6 @@ __Samples + Results__
 
 Make sure database + agg can be used.
 """
-print("\n\n***********************")
-print("****RESULTS TESTING****")
-print("***********************\n")
-
 for samples in agg.values("samples"):
     print(samples.parameter_lists[0])
 
@@ -121,10 +128,6 @@ print(mp_instances)
 """
 __Queries__
 """
-print("\n\n***********************")
-print("****QUERIES TESTING****")
-print("***********************\n")
-
 path_prefix = agg.search.path_prefix
 agg_query = agg.query(path_prefix == path.join("database", "session", dataset_name))
 print("Total Samples Objects via `path_prefix` model query = ", len(agg_query), "\n")
@@ -158,9 +161,6 @@ __Files__
 
 Check that all other files stored in database (e.g. model, search) can be loaded and used.
 """
-print("\n\n***********************")
-print("*****FILES TESTING*****")
-print("***********************\n")
 
 for model in agg.values("model"):
     print(f"\n****Model Info (model)****\n\n{model.info}")
@@ -168,29 +168,30 @@ for model in agg.values("model"):
 
 for search in agg.values("search"):
     print(f"\n****Search (search)****\n\n{search}")
-    assert search.paths.name == "multi_analysis"
+    assert search.paths.name == "general"
     assert path.join("database", "directory", dataset_name) in str(search.paths.output_path)
 
 for samples_summary in agg.values("samples_summary"):
     instance = samples_summary.max_log_likelihood()
     print(f"\n****Max Log Likelihood (samples_summary)****\n\n{instance}")
     assert instance.gaussian.centre > 0.0
+    print(samples_summary.max_log_likelihood_sample.log_likelihood)
 
 for info in agg.values("info"):
     print(f"\n****Info****\n\n{info}")
     assert info["hi"] == "there"
 
-for data in agg.child_values("dataset.data"):
+for data in agg.values("dataset.data"):
     print(f"\n****Data (dataset.data)****\n\n{data}")
-    assert data[0][0] > -1.0e8
+    assert data[0] > -1.0e8
 
-for noise_map in agg.child_values("dataset.noise_map"):
+for noise_map in agg.values("dataset.noise_map"):
     print(f"\n****Noise Map (dataset.noise_map)****\n\n{noise_map}")
-    assert noise_map[0][0] > 0.0
+    assert noise_map[0] > 0.0
 
-for data in agg.child_values("data_pickled"):
+for data in agg.values("data_pickled"):
     print(f"\n****Data (data_pickled)****\n\n{data}")
-    assert data[0][0] > -1.0e8
+    assert data[0] > -1.0e8
 
 for covariance in agg.values("covariance"):
     print(f"\n****Covariance (covariance)****\n\n{covariance}")
