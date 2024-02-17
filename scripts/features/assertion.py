@@ -49,15 +49,20 @@ __Model + Analysis__
 
 We create the model and analysis, which in this example is a single `Gaussian` and therefore has dimensionality N=3.
 """
-model = af.Model(af.ex.Gaussian)
+gaussian_0 = af.Model(af.ex.Gaussian)
+gaussian_1 = af.Model(af.ex.Gaussian)
 
-model.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-model.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
-model.sigma = af.LogGaussianPrior(mean=10.0, sigma=5.0)
+gaussian_0.add_assertion(gaussian_0.centre > gaussian_1.centre)
 
-model.add_assertion(
-    model.normalization > model.sigma
-)
+model = af.Collection(gaussian_0=gaussian_0, gaussian_1=gaussian_1)
+
+# model.gaussian.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
+# model.gaussian.normalization = af.UniformPrior(lower_limit=1e-2, upper_limit=1e2)
+# model.gaussian.sigma = af.UniformPrior(lower_limit=1e-2, upper_limit=1e2)
+#
+# model.add_assertion(
+#     model.gaussian.normalization > model.gaussian.sigma
+# )
 
 analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
@@ -87,45 +92,19 @@ search = af.DynestyStatic(
     max_move=100,
     iterations_per_update=10000,
     number_of_cores=1,
+    maxcall=10000,
+    maxiter=10000
 )
 
 result = search.fit(model=model, analysis=analysis)
 
 """
-__Result__
+By iterating over samples like this an assertion error is often raised.
 
-The result object returned by the fit provides information on the results of the non-linear search. Lets use it to
-compare the maximum log likelihood `Gaussian` to the data.
+We also explicitly check that the model instance has the correct attributes.
 """
-model_data = result.max_log_likelihood_instance.model_data_1d_via_xvalues_from(
-    xvalues=np.arange(data.shape[0])
-)
+for sample in result.samples.sample_list:
 
-plt.errorbar(
-    x=range(data.shape[0]),
-    y=data,
-    yerr=noise_map,
-    color="k",
-    ecolor="k",
-    elinewidth=1,
-    capsize=2,
-)
-plt.plot(range(data.shape[0]), model_data, color="r")
-plt.title("DynestyStatic model fit to 1D Gaussian dataset.")
-plt.xlabel("x values of profile")
-plt.ylabel("Profile normalization")
-plt.show()
-plt.close()
+    instance = sample.instance_for_model(model=result.samples.model)
 
-"""
-__Search Null Paths__
-
-If no `name`, `path_prefix` or `unique_tag` is specified for the search, the results are not written to the hard-disk. 
-
-Internally, *PyAutoFit** makes the paths a `NullPath` object.
-
-This test checks that the search runs in this mode and that no results are written to hard-disk.
-"""
-search = af.DynestyStatic(nlive=50)
-
-result = search.fit(model=model, analysis=analysis)
+    assert instance.gaussian_0.centre > instance.gaussian_1.centre
