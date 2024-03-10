@@ -3,7 +3,7 @@ general:
     backend: default
 plots_search:
   dynesty:
-    cornerplot: true
+    corner: true
     cornerpoints: false
     runplot: true
     traceplot: true
@@ -18,7 +18,7 @@ plots_search:
     time_series: true
     trajectories: true
   ultranest:
-    cornerplot: true
+    corner: true
     runplot: true
     traceplot: true
   zeus:
