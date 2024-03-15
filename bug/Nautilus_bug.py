@@ -22,7 +22,8 @@ import os
 
 cwd = os.getcwd()
 from autoconf import conf
-conf.instance.push(new_path=path.join(cwd, "config", "searches"))
+
+conf.instance.push(new_path=path.join(cwd, "config", "bug"))
 
 
 import autofit as af
@@ -97,34 +98,9 @@ gaussian_6.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
 gaussian_6.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
 gaussian_6.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=30.0)
 
-gaussian_7 = af.Model(af.ex.Gaussian)
-
-gaussian_7.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-gaussian_7.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
-gaussian_7.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=30.0)
-
-gaussian_8 = af.Model(af.ex.Gaussian)
-
-gaussian_8.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-gaussian_8.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
-gaussian_8.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=30.0)
-
-gaussian_9 = af.Model(af.ex.Gaussian)
-
-gaussian_9.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-gaussian_9.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
-gaussian_9.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=30.0)
-
-gaussian_10 = af.Model(af.ex.Gaussian)
-
-gaussian_10.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-gaussian_10.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
-gaussian_10.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=30.0)
-
 model = af.Collection(gaussian_0=gaussian_0, gaussian_1=gaussian_1, gaussian_2=gaussian_2,
                       gaussian_3=gaussian_3, gaussian_4=gaussian_4, gaussian_5=gaussian_5,
-                      gaussian_6=gaussian_6, gaussian_7=gaussian_7, gaussian_8=gaussian_8,
-                      gaussian_9=gaussian_9, gaussian_10=gaussian_10)
+                      gaussian_6=gaussian_6)
 
 analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
@@ -142,23 +118,11 @@ search = af.Nautilus(
     name="Nautilus",
     number_of_cores=4,
     n_live=100,  # Number of so-called live points. New bounds are constructed so that they encompass the live points.
-    n_update=None,  # The maximum number of additions to the live set before a new bound is created
-    enlarge_per_dim=1.1,  # Along each dimension, outer ellipsoidal bounds are enlarged by this factor.
-    n_points_min=None,  # The minimum number of points each ellipsoid should have. Effectively, ellipsoids with less than twice that number will not be split further.
-    split_threshold=100,  # Threshold used for splitting the multi-ellipsoidal bound used for sampling.
-    n_networks=4,  # Number of networks used in the estimator.
-    n_batch=100,  # Number of likelihood evaluations that are performed at each step. If likelihood evaluations are parallelized, should be multiple of the number of parallel processes.
-    n_like_new_bound=None,  # The maximum number of likelihood calls before a new bounds is created. If None, use 10 times n_live.
-    vectorized=False,  # If True, the likelihood function can receive multiple input sets at once.
-    seed=None,  # Seed for random number generation used for reproducible results accross different runs.
     f_live=1e-15,  # Maximum fraction of the evidence contained in the live set before building the initial shells terminates.
-    n_shell=1,  # Minimum number of points in each shell. The algorithm will sample from the shells until this is reached. Default is 1.
-    n_eff=500,  # Minimum effective sample size. The algorithm will sample from the shells until this is reached. Default is 10000.
-    discard_exploration=False,  # Whether to discard points drawn in the exploration phase. This is required for a fully unbiased posterior and evidence estimate.
-    verbose=True,  # Whether to print information about the run.
-    n_like_max=np.inf,  # Maximum number of likelihood evaluations. Regardless of progress, the sampler will stop if this value is reached. Default is infinity.
     iterations_per_update=2500,
 )
+
+samples = search.samples_from(model=model, search_internal=search_internal)
 
 result = search.fit(model=model, analysis=analysis)
 
