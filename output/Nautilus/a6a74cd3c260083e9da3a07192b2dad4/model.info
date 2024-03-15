@@ -1,0 +1,9 @@
+Total Free Parameters = 33
+
+model                                                                           Collection (N=33)
+    gaussian_0 - gaussian_9                                                     Gaussian (N=3)
+
+gaussian_0 - gaussian_9
+    centre                                                                      UniformPrior [3], lower_limit = 0.0, upper_limit = 100.0
+    normalization                                                               LogUniformPrior [4], lower_limit = 0.01, upper_limit = 100.0
+    sigma                                                                       UniformPrior [5], lower_limit = 0.0, upper_limit = 30.0
