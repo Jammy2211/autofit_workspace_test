@@ -18,6 +18,12 @@ Information about Nautilus can be found at the following links:
 import matplotlib.pyplot as plt
 import numpy as np
 from os import path
+import os
+
+cwd = os.getcwd()
+from autoconf import conf
+conf.instance.push(new_path=path.join(cwd, "config", "searches"))
+
 
 import autofit as af
 
@@ -151,60 +157,8 @@ search = af.Nautilus(
     discard_exploration=False,  # Whether to discard points drawn in the exploration phase. This is required for a fully unbiased posterior and evidence estimate.
     verbose=True,  # Whether to print information about the run.
     n_like_max=np.inf,  # Maximum number of likelihood evaluations. Regardless of progress, the sampler will stop if this value is reached. Default is infinity.
-    iterations_per_update=10,
+    iterations_per_update=2500,
 )
 
 result = search.fit(model=model, analysis=analysis)
 
-"""
-__Result__
-
-The result object returned by the fit provides information on the results of the non-linear search. Lets use it to
-compare the maximum log likelihood `Gaussian` to the data.
-"""
-model_data = result.max_log_likelihood_instance.model_data_1d_via_xvalues_from(
-    xvalues=np.arange(data.shape[0])
-)
-
-plt.errorbar(
-    x=range(data.shape[0]),
-    y=data,
-    yerr=noise_map,
-    color="k",
-    ecolor="k",
-    elinewidth=1,
-    capsize=2,
-)
-plt.plot(range(data.shape[0]), model_data, color="r")
-plt.title("Nautilus model fit to 1D Gaussian dataset.")
-plt.xlabel("x values of profile")
-plt.ylabel("Profile normalization")
-plt.show()
-plt.close()
-
-"""
-__Search Internal__
-
-The result also contains the internal representation of the non-linear search.
-
-The internal representation of the non-linear search ensures that all sampling info is available in its native form.
-This can be passed to functions which take it as input, for example if the sampling package has bespoke visualization 
-functions.
-
-For `DynestyStatic`, this is an instance of the `Sampler` object (`from nautilus import Sampler`).
-"""
-search_internal = result.search_internal
-
-print(search_internal)
-
-"""
-The internal search is by default not saved to hard-disk, because it can often take up quite a lot of hard-disk space
-(significantly more than standard output files).
-
-This means that the search internal will only be available the first time you run the search. If you rerun the code 
-and the search is bypassed because the results already exist on hard-disk, the search internal will not be available.
-
-If you are frequently using the search internal you can have it saved to hard-disk by changing the `search_internal`
-setting in `output.yaml` to `True`. The result will then have the search internal available as an attribute, 
-irrespective of whether the search is re-run or not.
-"""
