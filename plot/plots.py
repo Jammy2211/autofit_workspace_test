@@ -7,11 +7,11 @@ This test script iterates over all searches in autofit and outputs their corner 
 This is to ensure that all look as expected, similar and use the autofit samples object correctly.
 """
 """
-Plots: DynestyPlotter
+Plots: NestPlotter
 =====================
 
 This example illustrates how to plot visualization summarizing the results of a dynesty non-linear search using
-a `DynestyPlotter`.
+a `NestPlotter`.
 """
 # %matplotlib inline
 # from pyprojroot import here
@@ -41,26 +41,27 @@ analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 """
 __Dynesty__
 """
-search = af.DynestyStatic(path_prefix="plot", name="DynestyPlotter")
+search = af.DynestyStatic(path_prefix="plot", name="NestPlotter")
 
 result = search.fit(model=model, analysis=analysis)
 
 samples = result.samples
 
-search_plotter = aplt.NestPlotter(
+plotter = aplt.NestPlotter(
     samples=samples,
     output=aplt.Output(path=path.join("plot", "dynesty"), format="png"),
 )
 
-search_plotter.output.filename = "corner"
-search_plotter.corner()
+plotter.output.filename = "corner"
+plotter.corner_anesthetic()
+plotter.corner_cornerpy()
 
 """
 __Nautilus__
 """
 search = af.Nautilus(
     path_prefix="plot",
-    name="NautilusPlotter",
+    name="NestPlotter",
     n_live=100,  # Number of so-called live points. New bounds are constructed so that they encompass the live points.
 )
 
@@ -68,31 +69,31 @@ result = search.fit(model=model, analysis=analysis)
 
 samples = result.samples
 
-search_plotter = aplt.NestPlotter(
+plotter = aplt.NestPlotter(
     samples=samples,
     output=aplt.Output(path=path.join("plot", "nautilus"), format="png"),
 )
 
-search_plotter.output.filename = "corner"
-search_plotter.corner()
+plotter.output.filename = "corner"
+plotter.corner_anesthetic()
 
 
 """
 __UltraNest__
 """
-search = af.UltraNest(path_prefix="plot", name="UltraNestPlotter")
+search = af.UltraNest(path_prefix="plot", name="NestPlotter")
 
 result = search.fit(model=model, analysis=analysis)
 
 samples = result.samples
 
-search_plotter = aplt.NestPlotter(
+plotter = aplt.NestPlotter(
     samples=samples,
     output=aplt.Output(path=path.join("plot", "ultranest"), format="png"),
 )
 
-search_plotter.output.filename = "corner"
-search_plotter.corner()
+plotter.output.filename = "corner"
+plotter.corner_anesthetic()
 
 
 
@@ -100,7 +101,7 @@ search_plotter.corner()
 __Emcee__
 """
 search = af.Emcee(
-    path_prefix=path.join("plot"), name="EmceePlotter", nwalkers=100, nsteps=500
+    path_prefix=path.join("plot"), name="MCMCPlotter", nwalkers=100, nsteps=500
 )
 
 result = search.fit(
@@ -109,29 +110,20 @@ result = search.fit(
 
 samples = result.samples
 
-search_plotter = aplt.MCMCPlotter(
+plotter = aplt.MCMCPlotter(
     samples=samples,
     output=aplt.Output(path=path.join("plot", "emcee"), format="png"),
 )
 
-search_plotter.output.filename = "corner"
-search_plotter.corner()
-
-search_plotter.output.filename = "trajectories"
-search_plotter.trajectories()
-
-search_plotter.output.filename = "likelihood_series"
-search_plotter.likelihood_series()
-
-search_plotter.output.filename = "time_series"
-search_plotter.time_series()
+plotter.output.filename = "corner"
+plotter.corner_cornerpy()
 
 
 """
 __Zeus__
 """
 search = af.Zeus(
-    path_prefix=path.join("plot"), name="ZeusPlotter", nwalkers=100, nsteps=500
+    path_prefix=path.join("plot"), name="MCMCPlotter", nwalkers=100, nsteps=500
 )
 
 result = search.fit(
@@ -140,28 +132,19 @@ result = search.fit(
 
 samples = result.samples
 
-search_plotter = aplt.MCMCPlotter(
+plotter = aplt.MCMCPlotter(
     samples=samples,
     output=aplt.Output(path=path.join("plot", "zeus"), format="png"),
 )
 
-search_plotter.output.filename = "corner"
-search_plotter.corner()
-
-search_plotter.output.filename = "trajectories"
-search_plotter.trajectories()
-
-search_plotter.output.filename = "likelihood_series"
-search_plotter.likelihood_series()
-
-search_plotter.output.filename = "time_series"
-search_plotter.time_series()
+plotter.output.filename = "corner"
+plotter.corner_cornerpy()
 
 """
 __PySwarms__
 """
 search = af.PySwarmsGlobal(
-    path_prefix=path.join("plot"), name="PySwarmsPlotter", n_particles=100, iters=100
+    path_prefix=path.join("plot"), name="OptimizePlotter", n_particles=100, iters=100
 )
 
 result = search.fit(
@@ -170,22 +153,10 @@ result = search.fit(
 
 samples = result.samples
 
-search_plotter = aplt.OptimizePlotter(
+plotter = aplt.OptimizePlotter(
     samples=samples,
     output=aplt.Output(path=path.join("plot", "pyswarms"), format="png"),
 )
-
-search_plotter.output.filename = "contour"
-search_plotter.contour()
-
-search_plotter.output.filename = "cost_history"
-search_plotter.cost_history()
-
-search_plotter.output.filename = "trajectories"
-search_plotter.trajectories()
-
-time_series = search_plotter.time_series()
-time_series.figure()
 
 
 """
