@@ -117,12 +117,10 @@ search = af.Nautilus(
     path_prefix=path.join("searches"),
     name="Nautilus",
     number_of_cores=4,
-    n_live=100,  # Number of so-called live points. New bounds are constructed so that they encompass the live points.
+    n_live=500,  # Number of so-called live points. New bounds are constructed so that they encompass the live points.
     f_live=1e-15,  # Maximum fraction of the evidence contained in the live set before building the initial shells terminates.
-    iterations_per_update=2500,
+    iterations_per_update=10000,
 )
-
-samples = search.samples_from(model=model, search_internal=search_internal)
 
 result = search.fit(model=model, analysis=analysis)
 
