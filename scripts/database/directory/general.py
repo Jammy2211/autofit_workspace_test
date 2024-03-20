@@ -111,6 +111,8 @@ Make sure database + agg can be used.
 for samples in agg.values("samples"):
     print(samples.parameter_lists[0])
 
+    assert type(samples) == af.SamplesNest
+
 mp_instances = [samps.median_pdf() for samps in agg.values("samples")]
 print(mp_instances)
 

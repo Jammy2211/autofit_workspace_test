@@ -113,14 +113,26 @@ We manually specify all of the Nautilus settings, descriptions of which are prov
 
 https://github.com/johannesulf/nautilus
 """
-search = af.Nautilus(
+# search = af.Nautilus(
+#     path_prefix=path.join("searches"),
+#     name="Nautilus",
+#     number_of_cores=4,
+#     n_live=500,  # Number of so-called live points. New bounds are constructed so that they encompass the live points.
+#     f_live=1e-15,  # Maximum fraction of the evidence contained in the live set before building the initial shells terminates.
+#     iterations_per_update=10000,
+# )
+
+search = af.DynestyStatic(
     path_prefix=path.join("searches"),
-    name="Nautilus",
-    number_of_cores=4,
-    n_live=500,  # Number of so-called live points. New bounds are constructed so that they encompass the live points.
-    f_live=1e-15,  # Maximum fraction of the evidence contained in the live set before building the initial shells terminates.
+    name="DynestyStatic",
+    nlive=5000,
+    bound="multi",
+    sample="auto",
+    dlogz=0.00000001,
     iterations_per_update=10000,
+    number_of_cores=4,
 )
+
 
 result = search.fit(model=model, analysis=analysis)
 

@@ -101,15 +101,13 @@ The assertions below check that the associated files have not been output.
 assert not path.exists(search.paths._files_path / "search_internal")
 assert not path.exists(search.paths._files_path / "covariance.csv")
 
-aaa
-
 """
 __Database__
 """
 from autofit.aggregator.aggregator import Aggregator
 
 agg = Aggregator.from_directory(
-    directory=path.join("output", "database", "directory", dataset_name, name),
+    directory=path.join("output", "features", "minimal_output", dataset_name, name),
 )
 
 assert len(agg) > 0
@@ -120,10 +118,7 @@ __Samples + Results__
 Make sure database + agg can be used.
 """
 for samples in agg.values("samples"):
-    print(samples.parameter_lists[0])
-
-mp_instances = [samps.median_pdf() for samps in agg.values("samples")]
-print(mp_instances)
+    assert samples is None
 
 """
 __Queries__
@@ -168,8 +163,8 @@ for model in agg.values("model"):
 
 for search in agg.values("search"):
     print(f"\n****Search (search)****\n\n{search}")
-    assert search.paths.name == "general"
-    assert path.join("database", "directory", dataset_name) in str(search.paths.output_path)
+    assert search.paths.name == "simple"
+    assert path.join("features") in str(search.paths.output_path)
 
 for samples_summary in agg.values("samples_summary"):
     instance = samples_summary.max_log_likelihood()
@@ -178,21 +173,13 @@ for samples_summary in agg.values("samples_summary"):
     print(samples_summary.max_log_likelihood_sample.log_likelihood)
 
 for info in agg.values("info"):
-    print(f"\n****Info****\n\n{info}")
-    assert info["hi"] == "there"
+    assert info is None
 
 for data in agg.values("dataset.data"):
-    print(f"\n****Data (dataset.data)****\n\n{data}")
-    assert data[0] > -1.0e8
+    assert data is None
 
 for noise_map in agg.values("dataset.noise_map"):
-    print(f"\n****Noise Map (dataset.noise_map)****\n\n{noise_map}")
-    assert noise_map[0] > 0.0
-
-for data in agg.values("data_pickled"):
-    print(f"\n****Data (data_pickled)****\n\n{data}")
-    assert data[0] > -1.0e8
+    assert noise_map is None
 
 for covariance in agg.values("covariance"):
-    print(f"\n****Covariance (covariance)****\n\n{covariance}")
-    assert covariance[0][0] > 0.0
+    assert covariance is None

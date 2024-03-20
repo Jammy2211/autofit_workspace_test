@@ -121,6 +121,7 @@ print("***********************\n")
 
 for samples in agg.values("samples"):
     print(samples.parameter_lists[0])
+    assert type(samples) == af.SamplesNest
 
 mp_instances = [samps.median_pdf() for samps in agg.values("samples")]
 print(mp_instances)
@@ -176,7 +177,7 @@ for model in agg.values("model"):
 for search in agg.values("search"):
     print(f"\n****Search (search)****\n\n{search}")
     assert search.paths.name == "general"
-    assert path.join("database", "directory", dataset_name) in str(search.paths.output_path)
+    assert path.join("database", "scrape", dataset_name) in str(search.paths.output_path)
 
 for samples_summary in agg.values("samples_summary"):
     instance = samples_summary.max_log_likelihood()
