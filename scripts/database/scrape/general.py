@@ -180,8 +180,11 @@ for search in agg.values("search"):
     assert path.join("database", "scrape", dataset_name) in str(search.paths.output_path)
 
 for latent_samples in agg.values("latent_samples"):
-    print(latent_samples.parameter_lists[0])
-    assert latent_samples.parameter_lists[0][0] > 0.0
+    latent_fwhm_param = latent_samples.parameter_lists[0][0]
+    latent_fwhm_instance = latent_samples.max_log_likelihood()
+
+assert latent_fwhm_param > 0.0
+assert latent_fwhm_instance.gaussian.fwhm > 0.0
 
 for samples_summary in agg.values("samples_summary"):
     instance = samples_summary.max_log_likelihood()
