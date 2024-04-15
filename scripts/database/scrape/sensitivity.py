@@ -504,8 +504,8 @@ We are still developing the `SensitivityResult` class to provide a data structur
 of results. If you intend to use sensitivity mapping, the best way to interpret the resutls is currently via
 **PyAutoFit**'s database and `Aggregator` tools. 
 """
-print(sensitivity_result.results[0].result.samples.log_evidence)
-print(sensitivity_result.results[1].result.samples.log_evidence)
+print(sensitivity_result.samples[0].log_evidence)
+print(sensitivity_result.samples[1].log_evidence)
 
 """
 Scrape directory to create .sqlite file.

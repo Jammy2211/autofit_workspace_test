@@ -162,6 +162,9 @@ for search in agg.values("search"):
     assert search.paths.name == "general"
     assert path.join("database", "directory", dataset_name) in str(search.paths.output_path)
 
+for latent_samples in agg.values("latent_samples"):
+    print(latent_samples.parameter_lists[0])
+
 for samples_summary in agg.values("samples_summary"):
     instance = samples_summary.max_log_likelihood()
     print(f"\n****Max Log Likelihood (samples_summary)****\n\n{instance}")

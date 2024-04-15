@@ -53,7 +53,7 @@ samples_weight_threshold: 1.0e-10
 # quantities specific to the non-linear search that you are interested in inspecting. Deleting the folder means this
 # information is list.
 
-search_internal: false
+search_internal: true
 
 # Other Files:
 

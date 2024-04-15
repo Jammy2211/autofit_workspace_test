@@ -79,4 +79,10 @@ search = af.DynestyStatic(
 
 result = search.fit(model=model, analysis=analysis)
 
+latent = analysis.compute_latent_samples(result.samples)
+
+print(latent.max_log_likelihood().gaussian.fwhm)
+
+# print(latent.max_log_likelihood_sample.dict)
+
 aaa
