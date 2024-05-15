@@ -85,4 +85,3 @@ print(latent.max_log_likelihood().gaussian.fwhm)
 
 # print(latent.max_log_likelihood_sample.dict)
 
-aaa
