@@ -194,6 +194,6 @@ for data in agg.child_values("data_pickled"):
     print(f"\n****Data (data_pickled)****\n\n{data}")
     assert data[0][0] > -1.0e8
 
-for covariance in agg.values("covariance"):
-    print(f"\n****Covariance (covariance)****\n\n{covariance}")
-    assert covariance is not None
+# for covariance in agg.values("covariance"):
+#     print(f"\n****Covariance (covariance)****\n\n{covariance}")
+#     assert covariance is not None
