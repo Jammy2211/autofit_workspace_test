@@ -101,8 +101,6 @@ agg.add_directory(
 )
 
 for samples in agg.values("samples"):
-
     print(type(samples))
 
     adsadsas
-

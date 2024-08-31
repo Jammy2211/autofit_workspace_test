@@ -100,7 +100,6 @@ __Samples + Results__
 Make sure database + agg can be used.
 """
 for samples in agg.values("samples"):
-
     print(type(samples))
 
     seojmfposd

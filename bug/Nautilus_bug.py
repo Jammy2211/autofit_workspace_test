@@ -98,9 +98,15 @@ gaussian_6.centre = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
 gaussian_6.normalization = af.LogUniformPrior(lower_limit=1e-2, upper_limit=1e2)
 gaussian_6.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=30.0)
 
-model = af.Collection(gaussian_0=gaussian_0, gaussian_1=gaussian_1, gaussian_2=gaussian_2,
-                      gaussian_3=gaussian_3, gaussian_4=gaussian_4, gaussian_5=gaussian_5,
-                      gaussian_6=gaussian_6)
+model = af.Collection(
+    gaussian_0=gaussian_0,
+    gaussian_1=gaussian_1,
+    gaussian_2=gaussian_2,
+    gaussian_3=gaussian_3,
+    gaussian_4=gaussian_4,
+    gaussian_5=gaussian_5,
+    gaussian_6=gaussian_6,
+)
 
 analysis = af.ex.Analysis(data=data, noise_map=noise_map)
 
@@ -135,4 +141,3 @@ search = af.DynestyStatic(
 
 
 result = search.fit(model=model, analysis=analysis)
-

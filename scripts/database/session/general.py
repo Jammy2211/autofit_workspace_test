@@ -153,7 +153,9 @@ for model in agg.values("model"):
 for search in agg.values("search"):
     print(f"\n****Search (search)****\n\n{search}")
     assert search.paths.name == "general"
-    assert path.join("database", "directory", dataset_name) in str(search.paths.output_path)
+    assert path.join("database", "directory", dataset_name) in str(
+        search.paths.output_path
+    )
 
 for latent_samples in agg.values("latent_samples"):
     print(latent_samples.parameter_lists[0])

@@ -93,7 +93,7 @@ search = af.DynestyStatic(
     iterations_per_update=10000,
     number_of_cores=1,
     maxcall=10000,
-    maxiter=10000
+    maxiter=10000,
 )
 
 result = search.fit(model=model, analysis=analysis)
@@ -104,7 +104,6 @@ By iterating over samples like this an assertion error is often raised.
 We also explicitly check that the model instance has the correct attributes.
 """
 for sample in result.samples.sample_list:
-
     instance = sample.instance_for_model(model=result.samples.model)
 
     assert instance.gaussian_0.centre > instance.gaussian_1.centre

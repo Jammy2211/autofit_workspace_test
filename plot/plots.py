@@ -25,6 +25,7 @@ import os
 
 cwd = os.getcwd()
 from autoconf import conf
+
 conf.instance.push(new_path=path.join(cwd, "config", "plot"))
 
 import autofit as af
@@ -156,7 +157,6 @@ __UltraNest__
 # plotter.corner_anesthetic()
 
 
-
 """
 __Emcee__
 """
@@ -164,9 +164,7 @@ search = af.Emcee(
     path_prefix=path.join("plot"), name="MCMCPlotter", nwalkers=100, nsteps=500
 )
 
-result = search.fit(
-    model=model,
-    analysis=analysis)
+result = search.fit(model=model, analysis=analysis)
 
 samples = result.samples
 
@@ -186,13 +184,13 @@ The method below shows a 2D projection of the walker trajectories.
 fig, axes = plt.subplots(result.model.prior_count, figsize=(10, 7))
 
 for i in range(result.model.prior_count):
-
     for walker_index in range(search_internal.get_log_prob().shape[1]):
         ax = axes[i]
         ax.plot(
             search_internal.get_chain()[:, walker_index, i],
             search_internal.get_log_prob()[:, walker_index],
-            alpha=0.3)
+            alpha=0.3,
+        )
 
     ax.set_ylabel("Log Likelihood")
     ax.set_xlabel(result.model.parameter_labels_with_superscripts_latex[i])
@@ -206,7 +204,6 @@ This method shows the likelihood as a series of steps.
 fig, axes = plt.subplots(1, figsize=(10, 7))
 
 for walker_index in range(search_internal.get_log_prob().shape[1]):
-
     axes.plot(search_internal.get_log_prob()[:, walker_index], alpha=0.3)
 
 axes.set_ylabel("Log Likelihood")
@@ -235,9 +232,7 @@ search = af.Zeus(
     path_prefix=path.join("plot"), name="MCMCPlotter", nwalkers=100, nsteps=500
 )
 
-result = search.fit(
-    model=model,
-    analysis=analysis)
+result = search.fit(model=model, analysis=analysis)
 
 samples = result.samples
 
@@ -260,13 +255,13 @@ The method below shows a 2D projection of the walker trajectories.
 fig, axes = plt.subplots(result.model.prior_count, figsize=(10, 7))
 
 for i in range(result.model.prior_count):
-
     for walker_index in range(search_internal.get_log_prob().shape[1]):
         ax = axes[i]
         ax.plot(
             search_internal.get_chain()[:, walker_index, i],
             search_internal.get_log_prob()[:, walker_index],
-            alpha=0.3)
+            alpha=0.3,
+        )
 
     ax.set_ylabel("Log Likelihood")
     ax.set_xlabel(result.model.parameter_labels_with_superscripts_latex[i])
@@ -280,7 +275,6 @@ This method shows the likelihood as a series of steps.
 fig, axes = plt.subplots(1, figsize=(10, 7))
 
 for walker_index in range(search_internal.get_log_prob().shape[1]):
-
     axes.plot(search_internal.get_log_prob()[:, walker_index], alpha=0.3)
 
 axes.set_ylabel("Log Likelihood")
@@ -306,12 +300,10 @@ plt.savefig(path.join("plot", "zeus", "time_series.png"))
 __PySwarms__
 """
 search = af.PySwarmsGlobal(
-    path_prefix=path.join("plot"), name="OptimizePlotter", n_particles=100, iters=10
+    path_prefix=path.join("plot"), name="MLEPlotter", n_particles=100, iters=10
 )
 
-result = search.fit(
-    model=model,
-    analysis=analysis)
+result = search.fit(model=model, analysis=analysis)
 
 from pyswarms.utils import plotters
 
@@ -325,7 +317,7 @@ plotters.plot_cost_history(
     cost_history=result.search_internal.cost_history,
     ax=None,
     title="Cost History",
-    designer=None
+    designer=None,
 )
 plt.savefig(path.join("plot", "pyswarms", "cost_history.png"))
 

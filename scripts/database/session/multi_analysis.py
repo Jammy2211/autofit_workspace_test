@@ -169,7 +169,9 @@ for model in agg.values("model"):
 for search in agg.values("search"):
     print(f"\n****Search (search)****\n\n{search}")
     assert search.paths.name == "multi_analysis"
-    assert path.join("database", "directory", dataset_name) in str(search.paths.output_path)
+    assert path.join("database", "directory", dataset_name) in str(
+        search.paths.output_path
+    )
 
 for samples_summary in agg.values("samples_summary"):
     instance = samples_summary.max_log_likelihood()

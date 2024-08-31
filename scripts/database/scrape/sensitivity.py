@@ -205,6 +205,7 @@ class Dataset:
         self.data = data
         self.noise_map = noise_map
 
+
 """
 Each model-fit performed by sensitivity mapping creates a new instance of an `Analysis` class, which contains the
 data simulated by the `simulate_cls` for that model.
@@ -231,15 +232,15 @@ In this example, this `instance.perturb` corresponds to two different `gaussian_
 features .
 """
 
-class Simulate:
 
+class Simulate:
     def __init__(self):
         """
         Class used to simulate every dataset used for sensitivity mapping.
-        
+
         This `__init__` constructor can be extended with new inputs which can be used to control how the dataset is
         simulated in the `__call__` simulate_function below.
-        
+
         In this example we leave it empty as our `simulate_function` does not require any additional information.
         """
         pass
@@ -291,9 +292,9 @@ class Simulate:
         print(instance.perturb.normalization)
         print(instance.perturb.sigma)
 
-        model_line = instance.gaussian_main.model_data_1d_via_xvalues_from(
+        model_line = instance.gaussian_main.model_data_from(
             xvalues=xvalues
-        ) + instance.perturb.model_data_1d_via_xvalues_from(xvalues=xvalues)
+        ) + instance.perturb.model_data_from(xvalues=xvalues)
 
         """
         Determine the noise (at a specified signal to noise level) in every pixel of our model profile.
@@ -312,23 +313,22 @@ class Simulate:
 
 
 class BaseFit:
-
     def __init__(self, analysis_cls):
         """
-        Class used to fit every dataset used for sensitivity mapping with the base model (the model without the 
+        Class used to fit every dataset used for sensitivity mapping with the base model (the model without the
         perturbed feature sensitivity mapping maps out).
 
-        In this example, the base model therefore does not include the extra Gaussian feature, but the simulated 
+        In this example, the base model therefore does not include the extra Gaussian feature, but the simulated
         dataset includes one.
-        
-        The base fit is repeated for every parameter on the sensitivity grid and compared to the perturbed fit. This 
-        maps out the sensitivity of every parameter is (e.g. the sensitivity of the normalization of the Gaussian 
+
+        The base fit is repeated for every parameter on the sensitivity grid and compared to the perturbed fit. This
+        maps out the sensitivity of every parameter is (e.g. the sensitivity of the normalization of the Gaussian
         feature).
 
         The `__init__` constructor can be extended with new inputs which can be used to control how the dataset is
         fitted, below we include an input `analysis_cls` which is the `Analysis` class used to fit the model to the
         dataset.
-        
+
         Parameters
         ----------
         analysis_cls
@@ -366,23 +366,20 @@ class BaseFit:
 
         analysis = self.analysis_cls(dataset=dataset)
 
-        return search.fit(
-            model=model, analysis=analysis
-        )
+        return search.fit(model=model, analysis=analysis)
 
 
 class PerturbFit:
-
     def __init__(self, analysis_cls):
         """
-        Class used to fit every dataset used for sensitivity mapping with the perturbed model (the model with the 
+        Class used to fit every dataset used for sensitivity mapping with the perturbed model (the model with the
         perturbed feature sensitivity mapping maps out).
 
-        In this example, the perturbed model therefore includes the extra Gaussian feature, which is also in the 
+        In this example, the perturbed model therefore includes the extra Gaussian feature, which is also in the
         simulated dataset.
 
-        The perturbed fit is repeated for every parameter on the sensitivity grid and compared to the base fit. This 
-        maps out the sensitivity of every parameter is (e.g. the sensitivity of the normalization of the Gaussian 
+        The perturbed fit is repeated for every parameter on the sensitivity grid and compared to the base fit. This
+        maps out the sensitivity of every parameter is (e.g. the sensitivity of the normalization of the Gaussian
         feature).
 
         The `__init__` constructor can be extended with new inputs which can be used to control how the dataset is
@@ -424,9 +421,7 @@ class PerturbFit:
 
         analysis = self.analysis_cls(dataset=dataset)
 
-        return search.fit(
-            model=model, analysis=analysis
-        )
+        return search.fit(model=model, analysis=analysis)
 
 
 """

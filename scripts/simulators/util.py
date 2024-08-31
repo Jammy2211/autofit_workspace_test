@@ -19,7 +19,7 @@ def simulate_dataset_1d_via_gaussian_from(gaussian, dataset_path):
     """
     Evaluate this `Gaussian` model instance at every xvalues to create its model profile.
     """
-    model_data_1d = gaussian.model_data_1d_via_xvalues_from(xvalues=xvalues)
+    model_data_1d = gaussian.model_data_from(xvalues=xvalues)
 
     """
     Determine the noise (at a specified signal to noise level) in every pixel of our model profile.
