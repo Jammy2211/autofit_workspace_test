@@ -79,7 +79,7 @@ search = af.Emcee(
         required_length=50,
         change_threshold=0.01,
     ),
-    number_of_cores=2,
+    number_of_cores=1,
 )
 
 result = search.fit(model=model, analysis=analysis)

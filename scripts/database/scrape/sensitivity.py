@@ -336,7 +336,7 @@ class BaseFit:
         """
         self.analysis_cls = analysis_cls
 
-    def __call__(self, dataset, model, paths):
+    def __call__(self, dataset, model, paths, instance):
         """
         The base fitting function which fits every dataset used for sensitivity mapping with the base model.
 
@@ -393,7 +393,7 @@ class PerturbFit:
         """
         self.analysis_cls = analysis_cls
 
-    def __call__(self, dataset, model, paths):
+    def __call__(self, dataset, model, paths, instance):
         """
         The perturbed fitting function which fits every dataset used for sensitivity mapping with the perturbed model.
 
