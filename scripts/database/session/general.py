@@ -153,7 +153,7 @@ for model in agg.values("model"):
 for search in agg.values("search"):
     print(f"\n****Search (search)****\n\n{search}")
     assert search.paths.name == "general"
-    assert path.join("database", "directory", dataset_name) in str(
+    assert path.join("database", "session", dataset_name) in str(
         search.paths.output_path
     )
 
