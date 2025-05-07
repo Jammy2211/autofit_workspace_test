@@ -73,7 +73,17 @@ analysis = Analysis(data=data, noise_map=noise_map)
 """
 This script tests loading tools works when multiple analysis classes are used and summed together.
 """
-analysis = sum([analysis, analysis])
+analysis_factor_list = []
+
+for analysis in [analysis, analysis]:
+
+    model_analysis = model.copy()
+
+    analysis_factor = af.AnalysisFactor(prior_model=model_analysis, analysis=analysis)
+
+    analysis_factor_list.append(analysis_factor)
+
+factor_graph = af.FactorGraphModel(*analysis_factor_list)
 
 """
 Results are written directly to the `database.sqlite` file omitted hard-disc output entirely, which
@@ -93,7 +103,7 @@ search = af.DynestyStatic(
     maxiter=100,
 )
 
-result = search.fit(model=model, analysis=analysis, info={"hi": "there"})
+result_list = search.fit(model=factor_graph.global_prior_model, analysis=factor_graph, info={"hi" : "there"})
 
 """
 __Database__
@@ -136,19 +146,19 @@ name = agg.search.name
 agg_query = agg.query(name == "general")
 print("Total Samples Objects via `name` model query = ", len(agg_query), "\n")
 
-gaussian = agg.model.gaussian
-agg_query = agg.query(gaussian == af.ex.Gaussian)
-print("Total Samples Objects via `Gaussian` model query = ", len(agg_query), "\n")
-
-gaussian = agg.model.gaussian
-agg_query = agg.query(gaussian.sigma > 3.0)
-print("Total Samples Objects In Query `gaussian.sigma < 3.0` = ", len(agg_query), "\n")
-
-gaussian = agg.model.gaussian
-agg_query = agg.query((gaussian == af.ex.Gaussian) & (gaussian.sigma < 3.0))
-print(
-    "Total Samples Objects In Query `Gaussian & sigma < 3.0` = ", len(agg_query), "\n"
-)
+# gaussian = agg.model.gaussian
+# agg_query = agg.query(gaussian == af.ex.Gaussian)
+# print("Total Samples Objects via `Gaussian` model query = ", len(agg_query), "\n")
+#
+# gaussian = agg.model.gaussian
+# agg_query = agg.query(gaussian.sigma > 3.0)
+# print("Total Samples Objects In Query `gaussian.sigma < 3.0` = ", len(agg_query), "\n")
+#
+# gaussian = agg.model.gaussian
+# agg_query = agg.query((gaussian == af.ex.Gaussian) & (gaussian.sigma < 3.0))
+# print(
+#     "Total Samples Objects In Query `Gaussian & sigma < 3.0` = ", len(agg_query), "\n"
+# )
 
 unique_tag = agg.search.unique_tag
 agg_query = agg.query(unique_tag == "gaussian_x1_1")
@@ -179,7 +189,7 @@ for search in agg.values("search"):
 for samples_summary in agg.values("samples_summary"):
     instance = samples_summary.max_log_likelihood()
     print(f"\n****Max Log Likelihood (samples_summary)****\n\n{instance}")
-    assert instance.gaussian.centre > 0.0
+    assert instance[0].gaussian.centre > 0.0
 
 for info in agg.values("info"):
     print(f"\n****Info****\n\n{info}")
