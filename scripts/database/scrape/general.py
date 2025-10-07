@@ -4,6 +4,7 @@ Feature: Database
 
 Tests that general results can be loaded from hard-disk via a database built via a scrape.
 """
+
 # %matplotlib inline
 # from pyprojroot import here
 # workspace_path = str(here())

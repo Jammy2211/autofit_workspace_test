@@ -14,6 +14,7 @@ We then use this function to simulate many datasets, for many different models, 
 model-fitting procedure we used to perform Bayesian model comparison. This allows us to infer how much of a Bayesian
 evidence increase we should expect for datasets of varying quality and / or models with different parameters.
 """
+
 # %matplotlib inline
 # from pyprojroot import here
 # workspace_path = str(here())

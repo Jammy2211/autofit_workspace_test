@@ -6,6 +6,7 @@ This test script iterates over all searches in autofit and outputs their corner 
 
 This is to ensure that all look as expected, similar and use the autofit samples object correctly.
 """
+
 """
 Plots: DynestyPlotter
 =====================

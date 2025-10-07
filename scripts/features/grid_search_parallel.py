@@ -17,6 +17,7 @@ This example extends our example of fitting a 1D `Gaussian` profile and fits 3 i
 
 A full description of PyAutoFit's database tools is provided in the database chapter of the `HowToFit` lectures.
 """
+
 # %matplotlib inline
 # from pyprojroot import here
 # workspace_path = str(here())

@@ -5,6 +5,7 @@ Feature: Database
 Tests that the results of a fit which sums multiple Analysis classes together can be loaded from hard-disk via a
 database built via a scrape.
 """
+
 # %matplotlib inline
 # from pyprojroot import here
 # workspace_path = str(here())
@@ -103,7 +104,9 @@ search = af.DynestyStatic(
     maxiter=100,
 )
 
-result_list = search.fit(model=factor_graph.global_prior_model, analysis=factor_graph, info={"hi" : "there"})
+result_list = search.fit(
+    model=factor_graph.global_prior_model, analysis=factor_graph, info={"hi": "there"}
+)
 
 """
 __Database__

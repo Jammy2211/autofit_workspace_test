@@ -10,6 +10,7 @@ We concluded that this estimate of the centre was suboptimal for a number of rea
 fit the global `centre` to all 3 datasets simultaneously. In this tutorial we will do this by composing a graphical
 model.
 """
+
 # %matplotlib inline
 # from pyprojroot import here
 # workspace_path = str(here())

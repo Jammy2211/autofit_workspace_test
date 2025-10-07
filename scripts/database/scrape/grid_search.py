@@ -4,6 +4,7 @@ Feature: Database
 
 Tests that the results of a grid search of searches can be loaded from hard-disk via a database built via a scrape.
 """
+
 # %matplotlib inline
 # from pyprojroot import here
 # workspace_path = str(here())
