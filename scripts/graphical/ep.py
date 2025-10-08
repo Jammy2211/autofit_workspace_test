@@ -113,8 +113,10 @@ for model_index in range(len(data_list)):
 
     gaussian.centre = centre_shared_prior  # This prior is used by all 3 Gaussians!
 
-    gaussian.normalization = af.GaussianPrior(mean=3.0, sigma=5.0, lower_limit=0.0)
-    gaussian.sigma = af.GaussianPrior(mean=10.0, sigma=10.0, lower_limit=0.0)
+    gaussian.normalization = af.TruncatedGaussianPrior(
+        mean=3.0, sigma=5.0, lower_limit=0.0
+    )
+    gaussian.sigma = af.TruncatedGaussianPrior(mean=10.0, sigma=10.0, lower_limit=0.0)
     #
     # gaussian.normalization = af.UniformPrior(lower_limit=0.0, upper_limit=10.0)
     # gaussian.sigma = af.UniformPrior(lower_limit=0.0, upper_limit=50.0)
